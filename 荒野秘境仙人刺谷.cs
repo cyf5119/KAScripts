@@ -49,17 +49,17 @@ namespace Cyf5119Script
         }
         
         private static readonly (Vector3 Position, Vector2 Shape)[] AOEMap = 
-        [(new(-112.5f, -167f, -486.5f), new(8f, 22f)), 
-            (new(-147.5f, -167f, -471.5f), new(8f, 22f)),
-            (new(-147.5f, -167f, -486.5f), new(8f, 12f)), 
-            (new(-112.5f, -167f, -471.5f), new(8f, 12f))];
+        [(new(-112.5f, -167f, -486.5f), new(7.5f, 22f)), 
+            (new(-147.5f, -167f, -471.5f), new(7.5f, 22f)),
+            (new(-147.5f, -167f, -486.5f), new(7.5f, 12f)), 
+            (new(-112.5f, -167f, -471.5f), new(7.5f, 12f))];
 
         private static Vector2 GetShape(Vector3 position)
         {
             foreach (var (pos, shape) in AOEMap)
                 if (Math.Abs(position.X - pos.X) < 1 && Math.Abs(position.Z - pos.Z) < 1)
                     return shape;
-            return new Vector2 (8f, 35f);
+            return new Vector2 (7.5f, 35f);
         }
 
         #region BOSS1
@@ -332,7 +332,7 @@ namespace Cyf5119Script
         {
             if (ParseObjectId(@event["TargetId"], out var tid))
             {
-                stack2id = tid;
+                stack1id = tid;
             }
         }
         
