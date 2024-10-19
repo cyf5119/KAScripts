@@ -20,11 +20,16 @@ namespace Cyf5119Script
     [ScriptType(guid: "{C6AAF3DF-64BA-15C2-41F8-D24F7F4656DD}", name: "荒野秘境仙人刺谷", territorys: [1203], version: "0.0.0.1")]
     public class TenderValley
     {
-        private uint stackid = 0; 
+        private uint 
+            stack1id = 0,
+            stack2id = 0,
+            stack3id = 0;
         
         public void Init(ScriptAccessory accessory)
         {
-            stackid = 0;
+            stack1id = 0;
+            stack2id = 0;
+            stack3id = 0;
         }
         
         private static bool ParseObjectId(string? idStr, out uint id)
@@ -322,12 +327,30 @@ namespace Cyf5119Script
             accessory.Method.TextInfo("死刑", duration: 5000);
         }
 
-        [ScriptMethod(name: "老三分摊id获取", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:021F"], userControl: false)]
-        public void 老三分摊id获取(Event @event, ScriptAccessory accessory)
+        [ScriptMethod(name: "老三分摊id获取1", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:003E"], userControl: false)]
+        public void 老三分摊id获取1(Event @event, ScriptAccessory accessory)
         {
             if (ParseObjectId(@event["TargetId"], out var tid))
             {
-                stackid = tid;
+                stack2id = tid;
+            }
+        }
+        
+        [ScriptMethod(name: "老三分摊id获取2", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:021E"], userControl: false)]
+        public void 老三分摊id获取2(Event @event, ScriptAccessory accessory)
+        {
+            if (ParseObjectId(@event["TargetId"], out var tid))
+            {
+                stack2id = tid;
+            }
+        }
+        
+        [ScriptMethod(name: "老三分摊id获取3", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:021F"], userControl: false)]
+        public void 老三分摊id获取3(Event @event, ScriptAccessory accessory)
+        {
+            if (ParseObjectId(@event["TargetId"], out var tid))
+            {
+                stack3id = tid;
             }
         }
         
@@ -336,8 +359,8 @@ namespace Cyf5119Script
         public void 老三分摊一(Event @event, ScriptAccessory accessory)
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
-            if(stackid == 0) return;
-                dp.Owner = stackid;
+            if(stack1id == 0) return;
+                dp.Owner = stack1id;
             dp.Name = $"老三分摊一";
             dp.Scale = new(6);
             dp.Color = new(0.2f, 0.8f, 0.2f, 0.4f);
@@ -349,8 +372,8 @@ namespace Cyf5119Script
         public void 老三分摊二(Event @event, ScriptAccessory accessory)
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
-            if(stackid == 0) return;
-            dp.Owner = stackid;
+            if(stack2id == 0) return;
+            dp.Owner = stack2id;
             dp.Name = $"老三分摊二";
             dp.Scale = new(5);
             dp.Color = new(0.2f, 0.8f, 0.2f, 0.4f);
@@ -362,8 +385,8 @@ namespace Cyf5119Script
         public void 老三分摊三(Event @event, ScriptAccessory accessory)
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
-            if(stackid == 0) return;
-            dp.Owner = stackid;
+            if(stack3id == 0) return;
+            dp.Owner = stack3id;
             dp.Name = $"老三分摊三";
             dp.Scale = new(4);
             dp.Color = new(0.2f, 0.8f, 0.2f, 0.4f);
