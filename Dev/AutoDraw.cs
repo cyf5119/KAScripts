@@ -9,21 +9,22 @@ using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using ECommons;
 using ECommons.DalamudServices;
+using ECommons.GameFunctions;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using Lumina.Excel.GeneratedSheets2;
 
 // using Lumina.Excel.GeneratedSheets2;
 
 namespace Cyf5119Script
 {
-    [ScriptType(guid: "{FC02EEF5-5F68-2EF1-A41D-C8FC18346376}", name: "AutoDraw", territorys: [], version: "0.0.0.1")]
+    [ScriptType(guid: "{FC02EEF5-5F68-2EF1-A41D-C8FC18346376}", name: "AutoDraw", territorys: [], version: "0.0.0.2")]
     public class AutoDraw
     {
-        [UserSetting(note: "This is a test Property")]
-        public int prop1 { get; set; } = 1;
-
-        [UserSetting("Another Test Property")] public bool prop2 { get; set; } = false;
+        [UserSetting(note: "Show friend (true/false)")]
+        public bool ShowFriend { get; set; } = true;
 
         public void Init(ScriptAccessory accessory)
         {
@@ -41,40 +42,70 @@ namespace Cyf5119Script
             var tpos = JsonConvert.DeserializeObject<Vector3>(@event["TargetPosition"]);
 
             var action = Svc.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().GetRow(aid);
-            var cast_type = action.CastType;
-            if (cast_type == 1) return;
+            var castType = action.CastType;
             float range = action.EffectRange;
             float width = action.XAxisModifier;
             // TODO USE OMEN TO HELP ADJUST THE SHAPE
             // var omen = action.Omen;
-            var source = Svc.Objects.Where(x => x.GameObjectId == sid).FirstOrDefault();
-            var target = Svc.Objects.Where(x => x.GameObjectId == tid).FirstOrDefault();
-            if (cast_type >= 3 && cast_type <= 5) // deal fan = 3, laser = 4 , around = 5 with source radius extra
+            
+            dp.Name = $"AutoDraw {sid:X}:{aid}";
+            
+            if (castType == 1) return; // 1 is single target cast
+            
+            var source = GetObjById(sid);
+            var target = GetObjById(tid);
+            // var source = Svc.Objects.Where(x => x.GameObjectId == sid).FirstOrDefault();
+            // var target = Svc.Objects.Where(x => x.GameObjectId == tid).FirstOrDefault();
+            
+            if (castType >= 3 && castType <= 5) // deal fan = 3, laser = 4 , around = 5 with source radius extra
                 range += source.HitboxRadius;
             
-            dp.Name = $"{sid:X}:{aid}";
-            dp.DestoryAt = dura;
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Owner = sid;
+            dp.Color = new(0f, 0f, 0f, 0f);
+            // TODO here should add something for special actions
+            if (IsEnemy(Svc.ClientState.LocalPlayer, (ICharacter?)source))
+                dp.Color = accessory.Data.DefaultDangerColor;
+            else if (ShowFriend)
+                dp.Color = accessory.Data.DefaultSafeColor;
+            else
+                return;
             
-            // TODO JUDGE WHO IS ENEMY
-            if (cast_type == 8) // rect to target
+            // TODO here should add something for special actions
+            dp.Delay = 0;
+            dp.DestoryAt = dura;
+            
+            if (castType == 8) // rect to target
             {
-                if (source is null && target is null)
+                if (source is null || target is null)
                     return;
                 dp.TargetObject = tid;
                 dp.ScaleMode = ScaleMode.YByDistance;
             }
-            var shape = GetShapeDefault(cast_type);
-            if(shape == DrawTypeEnum.Circle || shape == DrawTypeEnum.Donut)
-                dp.Owner = tid;
+            
+            // TODO here should add something for special actions
+            var shape = GetShapeDefault(castType);
+            if (shape is null) return;
+            if (shape == DrawTypeEnum.Donut)
+            {
+                dp.InnerScale = new (range / 2);
+                dp.Radian = float.Pi * 2;
+            }
             
             dp.Scale = new Vector2(width != 0 ? width : range, range);
-            // if (width != 0)
-            //     dp.Scale = new Vector2(width, range);
 
-            accessory.Method.SendDraw(DrawModeEnum.Default, shape, dp);
-            accessory.Log.Debug($"{sid:X}:{aid} has been drawn.");
+            if (shape == DrawTypeEnum.Circle || shape == DrawTypeEnum.Donut)
+            {
+                if (tid != sid)
+                    dp.Owner = tid;
+                else
+                    dp.Position = tpos;
+            }
+            else
+            {
+                dp.Owner = sid;
+            }
+
+            accessory.Method.SendDraw(DrawModeEnum.Default, (DrawTypeEnum)shape, dp);
+            accessory.Log.Debug($"AutoDraw {sid:X}:{aid}");
         }
 
         [ScriptMethod(name: "CancelCast", eventType: EventTypeEnum.CancelAction)]
@@ -83,11 +114,10 @@ namespace Cyf5119Script
             ParseObjectId(@event["SourceId"], out var sid);
             var aid = JsonConvert.DeserializeObject<uint>(@event["ActionId"]);
 
-            accessory.Method.RemoveDraw($"{sid:X}:{aid}");
-            accessory.Log.Debug($"{sid:X}:{aid} has been canceled.");
+            accessory.Method.RemoveDraw($"AutoDraw {sid:X}:{aid}");
+            accessory.Log.Debug($"CancelAuto {sid:X}:{aid}");
         }
-
-
+        
         private static bool ParseObjectId(string? idStr, out uint id)
         {
             id = 0;
@@ -104,7 +134,7 @@ namespace Cyf5119Script
             }
         }
 
-        private DrawTypeEnum GetShapeDefault(byte cast_type)
+        private static DrawTypeEnum? GetShapeDefault(byte castType)
         {
             var shapeDict = new Dictionary<byte, DrawTypeEnum>
             {
@@ -121,51 +151,82 @@ namespace Cyf5119Script
                 { 12, DrawTypeEnum.Rect }, // rect 
                 { 13, DrawTypeEnum.Fan } // fan
             };
-            return shapeDict[cast_type];
+            if (shapeDict.ContainsKey(castType))
+                return shapeDict[castType];
+            return null;
         }
+        
+        private static bool ReadUnknown(Battalion? b, int i)
+        {
+            if (b is null) return false;
+            switch (i)
+            {
+                case 0:
+                    return b.Unknown0;
+                case 1:
+                    return b.Unknown1;
+                case 2:
+                    return b.Unknown2;
+                case 3:
+                    return b.Unknown3;
+                case 4:
+                    return b.Unknown4;
+                case 5:
+                    return b.Unknown5;
+                case 6:
+                    return b.Unknown6;
+                case 7:
+                    return b.Unknown7;
+                case 8:
+                    return b.Unknown8;
+                case 9:
+                    return b.Unknown9;
+                case 10:
+                    return b.Unknown10;
+                case 11:
+                    return b.Unknown11;
+                case 12:
+                    return b.Unknown12;
+                case 13:
+                    return b.Unknown13;
+                case 14:
+                    return b.Unknown14;
+                default:
+                    return false;
+            }
+        }
+        
+        private static unsafe byte GetBattalionKey(ICharacter character, uint mode)
+        {
+            if (mode == 1 && character.ObjectKind == ObjectKind.Player)
+                return 0;
+            return character.Struct()->Battalion;
+        }
+        
+        private static bool IsEnemy(ICharacter? a1, ICharacter? a2)
+        {
+            if (a1 is null || a2 is null) return true;
+            byte battalionMode;
+            try
+            {
+                battalionMode = Svc.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.TerritoryType>().GetRow(Svc.ClientState.TerritoryType).BattalionMode;
+            }
+            catch(KeyNotFoundException)
+            {
+                return false;
+            }
 
-        // private byte GetBattalion(uint id, uint mode)
-        // {
-        //     var obj = Svc.Objects.Where(x => x.GameObjectId == id).FirstOrDefault();
-        //     if (mode == 1 && obj.ObjectKind == ObjectKind.Player)
-        //         return 0;
-        //     // TODO FIND OUT HOW TO GET THE Battalion
-        //     return (byte)obj.ObjectKind;
-        // }
-        //
-        // private bool IsEnemy(uint? id1, uint? id2)
-        // {
-        //     var obj1 = GetObjById(id1);
-        //     var obj2 = GetObjById(id2);
-        //     if (id1 is null && id2 is null)
-        //         return true;
-        //     if ((byte)obj1.ObjectKind > 2 || (byte)obj2.ObjectKind > 2)
-        //         return false;
-        //     byte battalion_mode;
-        //     try
-        //     {
-        //         battalion_mode = Svc.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.TerritoryType>().GetRow(Svc.ClientState.TerritoryType).BattalionMode;
-        //     }
-        //     catch (KeyNotFoundException)
-        //     {
-        //         return false;
-        //     }
-        //
-        //     if (battalion_mode == 0)
-        //         return false;
-        //     
-        //     // TODO FIND OUT HOW TO GET THE Battalion
-        //     var row = Svc.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets2.Battalion>().GetRow(GetBattalion());
-        //     
-        //     return ;
-        // }
-
-
-        // private IGameObject? GetObjById(ulong? objid)
-        // {
-        //     if (objid is null)
-        //         return null;
-        //     return Svc.Objects.SearchById((ulong)objid);
-        // }
+            if (battalionMode == 0)
+                return false;
+            var row = Svc.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets2.Battalion>().GetRow(GetBattalionKey(a1, battalionMode));
+            return ReadUnknown(row, GetBattalionKey(a2, battalionMode));
+        }
+        
+        private IGameObject? GetObjById(ulong? objid)
+        {
+            if (objid is null)
+                return null;
+            return Svc.Objects.SearchById((ulong)objid);
+        }
     }
 }
