@@ -10,7 +10,7 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script
 {
-    [ScriptType(guid: "{C6AAF3DF-64BA-15C2-41F8-D24F7F4656DD}", name: "荒野秘境仙人刺谷", territorys: [1203], version: "0.0.0.1")]
+    [ScriptType(guid: "C6AAF3DF-64BA-15C2-41F8-D24F7F4656DD", name: "荒野秘境仙人刺谷", territorys: [1203], version: "0.0.0.1")]
     public class TenderValley
     {
         private uint 
