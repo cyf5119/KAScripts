@@ -1,19 +1,12 @@
 ﻿using System;
-using KodakkuAssist.Module.GameEvent;
-using KodakkuAssist.Script;
-using KodakkuAssist.Module.Draw;
-using Dalamud.Utility.Numerics;
-using System.Numerics;
-using System.Runtime.Intrinsics.Arm;
-using Dalamud.Memory.Exceptions;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using ECommons;
 using System.Linq;
-using ImGuiNET;
-using static Dalamud.Interface.Utility.Raii.ImRaii;
-using KodakkuAssist.Module.GameOperate;
+using System.Numerics;
+using Newtonsoft.Json;
+using Dalamud.Utility.Numerics;
+using ECommons;
+using KodakkuAssist.Script;
+using KodakkuAssist.Module.GameEvent;
+using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script
 {
@@ -86,7 +79,7 @@ namespace Cyf5119Script
             }
             dp.Name = $"老一分摊";
             dp.Scale = new(6);
-            dp.Color = new(0.2f, 0.8f, 0.2f, 0.4f);
+            dp.Color = new(0.2f, 1f, 0.2f, .8f);
             dp.DestoryAt = 5000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
@@ -102,7 +95,7 @@ namespace Cyf5119Script
             dp.Name = $"老一扇形";
             dp.Scale = new(36);
             dp.Radian = float.Pi / 180 * 50;
-            dp.Color = new(0.2f, 0.2f, 0.8f, 1.6f);
+            dp.Color = new(0.2f, 1f, 1f, 1.6f);
             dp.DestoryAt = 6500;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
         }
@@ -119,7 +112,7 @@ namespace Cyf5119Script
             dp.Scale = new(36);
             dp.Radian = float.Pi / 180 * 330;
             dp.Rotation = float.Pi / -2;
-            dp.Color = new(0.2f, 0.2f, 0.8f, 1.6f);
+            dp.Color = new(0.2f, 1f, 1f, 1f);
             dp.DestoryAt = 7000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
         }
@@ -136,7 +129,7 @@ namespace Cyf5119Script
             dp.Scale = new(36);
             dp.Radian = float.Pi / 180 * 330;
             dp.Rotation = float.Pi / 2;
-            dp.Color = new(0.2f, 0.2f, 0.8f, 1.6f);
+            dp.Color = new(0.2f, 1f, 1f, 1f);
             dp.DestoryAt = 7000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
         }
@@ -152,7 +145,7 @@ namespace Cyf5119Script
             }
             dp.Name = $"老一大仙人球{sid:X}";
             dp.Scale = new(11);
-            dp.Color = new(0.8f, 0.2f, 0.2f, 0.8f);
+            dp.Color = new(1f, 0.2f, 0.2f, 0.8f);
             dp.DestoryAt = 5000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
@@ -176,7 +169,7 @@ namespace Cyf5119Script
             }
             dp.Name = $"老一小仙人球{sid:X}";
             dp.Scale = new(6);
-            dp.Color = new(0.8f, 0.2f, 0.2f, 0.8f);
+            dp.Color = new(1f, 0.2f, 0.2f, 0.8f);
             dp.DestoryAt = 5000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
@@ -196,7 +189,7 @@ namespace Cyf5119Script
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "老一击退预测";
             dp.Scale = new(1.5f,20);
-            dp.Color = new(0.2f, 0.8f, 0.8f, 1.6f);
+            dp.Color = new(0.2f, 1f, 1f, 1.6f);
             dp.Owner = accessory.Data.Me;
             dp.TargetPosition = new(-65f, -4f, 470f);
             dp.Rotation = float.Pi;
@@ -230,7 +223,7 @@ namespace Cyf5119Script
             }
             dp.Name = $"老二分摊";
             dp.Scale = new(6);
-            dp.Color = new(0.2f, 0.8f, 0.2f, 0.4f);
+            dp.Color = new(0.2f, 1f, 0.2f, .8f);
             dp.DestoryAt = 5000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
@@ -245,7 +238,7 @@ namespace Cyf5119Script
             }
             dp.Name = $"老二炸弹圆形一{sid:X}";
             dp.Scale = new(10);
-            dp.Color = new(0.2f, 0.2f, 0.8f, 0.8f);
+            dp.Color = new(0.2f, 1f, 1f, 0.8f);
             dp.DestoryAt = 11500;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
@@ -260,7 +253,7 @@ namespace Cyf5119Script
             }
             dp.Name = $"老二炸弹圆形二{sid:X}";
             dp.Scale = new(10);
-            dp.Color = new(0.2f, 0.2f, 0.8f, 0.8f);
+            dp.Color = new(0.2f, 1f, 1f, 0.8f);
             dp.DestoryAt = 8500;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
@@ -275,7 +268,7 @@ namespace Cyf5119Script
             }
             dp.Name = $"老二炸弹直线一{sid:X}";
             dp.Scale = new(6f, 40f);
-            dp.Color = new(0.8f, 0.2f, 0.2f, 0.8f);
+            dp.Color = new(1f, 0.2f, 0.2f, 0.8f);
             dp.DestoryAt = 11500;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
         }
@@ -290,7 +283,7 @@ namespace Cyf5119Script
             }
             dp.Name = $"老二炸弹直线二{sid:X}";
             dp.Scale = new(6f, 40f);
-            dp.Color = new(0.8f, 0.2f, 0.2f, 0.8f);
+            dp.Color = new(1f, 0.2f, 0.2f, 0.8f);
             dp.DestoryAt = 8500;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
         }
@@ -306,7 +299,7 @@ namespace Cyf5119Script
             var pos= JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
             dp.Owner = sid;
             dp.Name = $"道中石像";
-            dp.Color = new(0.8f, 0.2f, 0.2f, 0.8f);
+            dp.Color = new(1f, 0.2f, 0.2f, 1f);
             dp.DestoryAt = 8100;
             dp.Scale = GetShape(pos);
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
@@ -363,7 +356,7 @@ namespace Cyf5119Script
                 dp.Owner = stack1id;
             dp.Name = $"老三分摊一";
             dp.Scale = new(6);
-            dp.Color = new(0.2f, 0.8f, 0.2f, 0.4f);
+            dp.Color = new(0.2f, 1f, 0.2f, .8f);
             dp.DestoryAt = 5000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
@@ -376,7 +369,7 @@ namespace Cyf5119Script
             dp.Owner = stack2id;
             dp.Name = $"老三分摊二";
             dp.Scale = new(5);
-            dp.Color = new(0.2f, 0.8f, 0.2f, 0.4f);
+            dp.Color = new(0.2f, 1f, 0.2f, .8f);
             dp.DestoryAt = 5000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
@@ -389,7 +382,7 @@ namespace Cyf5119Script
             dp.Owner = stack3id;
             dp.Name = $"老三分摊三";
             dp.Scale = new(4);
-            dp.Color = new(0.2f, 0.8f, 0.2f, 0.4f);
+            dp.Color = new(0.2f, 1f, 0.2f, .8f);
             dp.DestoryAt = 5000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
@@ -404,7 +397,7 @@ namespace Cyf5119Script
             }
             dp.Name = $"老三圆形{sid:X}";
             dp.Scale = new(9);
-            dp.Color = new(0.8f, 0.2f, 0.2f, 0.8f);
+            dp.Color = new(1f, 0.2f, 0.2f, 0.8f);
             dp.DestoryAt = 7000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
@@ -419,7 +412,7 @@ namespace Cyf5119Script
             }
             dp.Name = $"老三直线{sid:X}";
             dp.Scale = new(5f, 52f);
-            dp.Color = new(0.8f, 0.2f, 0.2f, 0.8f);
+            dp.Color = new(1f, 0.2f, 0.2f, 0.8f);
             dp.DestoryAt = 7000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
         }
@@ -434,7 +427,7 @@ namespace Cyf5119Script
             }
             dp.Name = "老三击退预测";
             dp.Scale = new(1.5f,15);
-            dp.Color = new(0.2f, 0.8f, 0.8f, 1.6f);
+            dp.Color = new(0.2f, 1f, 1f, 1.6f);
             dp.Owner = accessory.Data.Me;
             dp.Rotation = float.Pi;
             dp.DestoryAt = 6000;
@@ -466,7 +459,7 @@ namespace Cyf5119Script
             }
             dp.Name = "老三迷宫安全区";
             dp.Scale = new(4);
-            dp.Color = new(0.2f, 1f, 0.2f, 1.5f);
+            dp.Color = new(0.2f, 1f, 0.2f, 1.6f);
             dp.DestoryAt = 10000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
         }
