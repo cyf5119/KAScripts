@@ -15,7 +15,7 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script;
 
-[ScriptType(guid: "{32BC9D47-D623-507F-CDBF-E17EFEA73FA4}", name: "噩梦乐园迷途鬼区", territorys: [1204], version: "0.0.0.1")]
+[ScriptType(guid: "32BC9D47-D623-507F-CDBF-E17EFEA73FA4", name: "噩梦乐园迷途鬼区", territorys: [1204], version: "0.0.0.1")]
 public class TheStrayboroughDeadwalk
 {
     private List<Vector3> tethered = [];
