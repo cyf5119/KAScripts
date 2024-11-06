@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.Intrinsics.Arm;
+// using System.Runtime.Intrinsics.Arm;
 using System.Collections.Generic;
+using System.Threading;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using ECommons;
@@ -84,31 +85,41 @@ public class Alexandria
         if (!ParseObjectId(@event["SourceId"], out var sid)) return;
         var did = JsonConvert.DeserializeObject<uint>(@event["DataId"]);
         // if (InterferonList.Count > 4) return;
-        InterferonList.Add([sid, did]);
-        if (InterferonList.Count < 5) return;
-        DrawCrossAndDonut(accessory);
+        lock (InterferonList)
+        {
+            if (InterferonList.Count > 0)
+                foreach (var list in InterferonList)
+                {
+                    if(list[0] == sid) return;
+                }
+            InterferonList.Add([sid, did]);
+            if (InterferonList.Count < 5) return;
+            DrawCrossAndDonut(accessory);
+        }
     }
 
-    [ScriptMethod(name: "老一十字与月环后续", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(3638[23])$"])]
+    [ScriptMethod(name: "老一十字与月环后续", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(3638[23])$"])]
     public void Boss1CrossAndDonutEffect(Event @event, ScriptAccessory accessory)
     {
+        Thread.Sleep(1000);
         DrawCrossAndDonut(accessory);
     }
 
     private void DrawCrossAndDonut(ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw("Cross or Donut");
+        // accessory.Method.RemoveDraw("Cross or Donut");
         if (InterferonList.Count < 1) return;
         var dp = accessory.Data.GetDefaultDrawProperties();
         var sid = InterferonList[0][0];
         var did = InterferonList[0][1];
         dp.Name = "Cross or Donut";
         dp.Color = accessory.Data.DefaultDangerColor;
-        dp.DestoryAt = InterferonList.Count > 4 ? 10000 : 2500;
+        dp.DestoryAt = InterferonList.Count > 4 ? 6000 : 2500;
         dp.Owner = sid;
         if (did == 16757)
         {
             dp.Scale = new Vector2(6, 80);
+            dp.Rotation = float.Pi;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
             dp.Rotation = float.Pi / 2;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
