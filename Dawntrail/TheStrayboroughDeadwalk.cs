@@ -15,18 +15,18 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script;
 
-[ScriptType(guid: "32BC9D47-D623-507F-CDBF-E17EFEA73FA4", name: "噩梦乐园迷途鬼区", territorys: [1204], version: "0.0.0.1")]
+[ScriptType(guid: "32BC9D47-D623-507F-CDBF-E17EFEA73FA4", name: "噩梦乐园迷途鬼区", territorys: [1204], version: "0.0.0.2", author:"Cyf5119")]
 public class TheStrayboroughDeadwalk
 {
     private List<Vector3> tethered = [];
-    private uint shareRecord = 0;
+    private uint stackRecord = 0;
 
 
     public void Init(ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw(".*");
         tethered = [];
-        shareRecord = 0;
+        stackRecord = 0;
     }
 
     private static bool ParseObjectId(string? idStr, out uint id)
@@ -61,7 +61,7 @@ public class TheStrayboroughDeadwalk
         var srot = JsonConvert.DeserializeObject<float>(@event["SourceRotation"]);
         dp.Name = "Boss1Exaflare";
         dp.Scale = new Vector2(4);
-        dp.Color = new Vector4(1.0f, .2f, .2f, 0.8f);
+        dp.Color = accessory.Data.DefaultDangerColor;
         dp.Delay = 4400;
         dp.DestoryAt = 3200;
         for (int i = 0; i < 4; i++)
@@ -80,7 +80,7 @@ public class TheStrayboroughDeadwalk
         var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
         dp.Name = "Boss1ChasingAoe";
         dp.Scale = new Vector2(4);
-        dp.Color = new Vector4(1.0f, .2f, .2f, 0.8f);
+        dp.Color = accessory.Data.DefaultDangerColor;
         dp.DestoryAt = 1600;
 
         // var nearTarget = FakeParty.Get().OrderBy(x => Vector3.Distance(pos, x.Position)).FirstOrDefault();
@@ -137,7 +137,7 @@ public class TheStrayboroughDeadwalk
         dp.Owner = sid;
         dp.Name = $"好脑袋 {sid}";
         dp.Scale = new Vector2(2);
-        dp.Color = new Vector4(1f, .2f, .2f, .8f);
+        dp.Color = accessory.Data.DefaultDangerColor;
         dp.DestoryAt = 4000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
@@ -193,7 +193,7 @@ public class TheStrayboroughDeadwalk
         if (!TeacupsHelper(id, out uint dura, out List<Vector3> pos)) return;
         dp.Name = "老二茶杯";
         dp.Scale = new(19);
-        dp.Color = new(1f, 0.2f, 0.2f, .8f);
+        dp.Color = accessory.Data.DefaultDangerColor;
         dp.DestoryAt = dura;
         foreach (var p in pos)
         {
@@ -280,7 +280,7 @@ public class TheStrayboroughDeadwalk
     public void Boss3ShareRecord(Event @event, ScriptAccessory accessory)
     {
         ParseObjectId(@event["TargetId"], out var tid);
-        shareRecord = tid;
+        stackRecord = tid;
     }
 
     [ScriptMethod(name: "老三分摊", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:37142"])]
@@ -289,13 +289,13 @@ public class TheStrayboroughDeadwalk
         var dp = accessory.Data.GetDefaultDrawProperties();
         ParseObjectId(@event["SourceId"], out var sid);
         dp.Name = "老三分摊";
-        dp.Color = new Vector4(.2f, 1f, .2f, .8f);
+        dp.Color = accessory.Data.DefaultSafeColor;
         dp.Scale = new Vector2(8, 80);
         dp.DestoryAt = 5000;
         dp.Owner = sid;
         
         Thread.Sleep(100);
-        dp.TargetObject = shareRecord;
+        dp.TargetObject = stackRecord;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
     
@@ -332,8 +332,8 @@ public class TheStrayboroughDeadwalk
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         ParseObjectId(@event["SourceId"], out var sid);
-        dp.Name = "老三辣翅";
-        dp.Color = new Vector4(1f, .2f, .2f, .8f);
+        dp.Name = "老三小怪";
+        dp.Color = accessory.Data.DefaultDangerColor;
         dp.Scale = new Vector2(4, 40);
         dp.DestoryAt = 6000;
         dp.Owner = sid;
