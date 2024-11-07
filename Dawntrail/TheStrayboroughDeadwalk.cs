@@ -15,7 +15,7 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script;
 
-[ScriptType(guid: "32BC9D47-D623-507F-CDBF-E17EFEA73FA4", name: "噩梦乐园迷途鬼区", territorys: [1204], version: "0.0.0.2", author:"Cyf5119")]
+[ScriptType(guid: "32BC9D47-D623-507F-CDBF-E17EFEA73FA4", name: "噩梦乐园迷途鬼区", territorys: [1204], version: "0.0.0.3", author:"Cyf5119")]
 public class TheStrayboroughDeadwalk
 {
     private List<Vector3> tethered = [];
@@ -184,13 +184,12 @@ public class TheStrayboroughDeadwalk
         tethered.Clear();
     }
 
-    [ScriptMethod(name: "老二茶杯", eventType: EventTypeEnum.EnvControl,
-        eventCondition: ["Index:regex:^(00000023|00000001)$"])]
+    [ScriptMethod(name: "老二茶杯", eventType: EventTypeEnum.EnvControl, eventCondition: ["Index:regex:^(00000023|00000001)$"])]
     public void Boss2Teacups(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         var id = @event["Id"];
-        if (!TeacupsHelper(id, out uint dura, out List<Vector3> pos)) return;
+        if (!TeacupsHelper(id, out uint dura, out var pos)) return;
         dp.Name = "老二茶杯";
         dp.Scale = new(19);
         dp.Color = accessory.Data.DefaultDangerColor;
@@ -260,9 +259,10 @@ public class TheStrayboroughDeadwalk
 
     private bool CheckPositions(Vector3 pos1, Vector3? pos2)
     {
-        if (pos2 is null)
+        if (tethered.Count == 1)
             return Vector3.Distance(pos1, tethered[0]) < 1;
-        return Vector3.Distance(pos1, tethered[0]) < 1 && Vector3.Distance((Vector3)pos2, tethered[1]) < 1;
+        return (Vector3.Distance(pos1, tethered[0]) < 1 && Vector3.Distance((Vector3)pos2, tethered[1]) < 1) ||
+               (Vector3.Distance(pos1, tethered[1]) < 1 && Vector3.Distance((Vector3)pos2, tethered[0]) < 1);
     }
     
     #endregion

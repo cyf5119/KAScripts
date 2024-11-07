@@ -10,8 +10,7 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script
 {
-    [ScriptType(guid: "C6AAF3DF-64BA-15C2-41F8-D24F7F4656DD", name: "荒野秘境仙人刺谷", territorys: [1203], version: "0.0.0.2",
-        author: "Cyf5119")]
+    [ScriptType(guid: "C6AAF3DF-64BA-15C2-41F8-D24F7F4656DD", name: "荒野秘境仙人刺谷", territorys: [1203], version: "0.0.0.3", author: "Cyf5119")]
     public class TenderValley
     {
         private uint
@@ -116,7 +115,7 @@ namespace Cyf5119Script
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
         }
 
-        [ScriptMethod(name: "老一仙人球", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex^(3738[89]$)"])]
+        [ScriptMethod(name: "老一仙人球", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(3738[89]$)"])]
         public void Boss1Adds(Event @event, ScriptAccessory accessory)
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
@@ -205,6 +204,7 @@ namespace Cyf5119Script
             dp.Name = $"老二炸弹直线一{sid:X}";
             dp.Color = accessory.Data.DefaultDangerColor;
             dp.DestoryAt = aid == 36545 ? 11500 : 8500;
+            dp.Owner = sid;
             dp.Scale = new(6f, 40f);
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
         }
