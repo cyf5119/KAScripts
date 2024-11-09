@@ -19,5 +19,12 @@
     "Version": "0.0.0.3",
     "Author": "Cyf5119",
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/Dawntrail/TheStrayboroughDeadwalk.cs"
+  },
+  {
+    "Name": "M1n",
+    "Guid": "28EEE8DC-DA6A-3F91-0D0C-7AA1BFB49AB0",
+    "Version": "0.0.0.1",
+    "Author": "Cyf5119",
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/Dawntrail/M1n.cs"
   }
 ]
