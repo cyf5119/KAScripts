@@ -26,5 +26,12 @@
     "Version": "0.0.0.1",
     "Author": "Cyf5119",
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/Dawntrail/M1n.cs"
+  },
+  {
+    "Name": "AalBomb",
+    "Guid": "2F27EFB2-CE87-4E6A-9D83-60FE4CC26141",
+    "Version": "0.0.0.1",
+    "Author": "Cyf5119",
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/Endwalker/AalBomb.cs"
   }
 ]
