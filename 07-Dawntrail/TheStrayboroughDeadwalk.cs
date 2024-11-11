@@ -15,7 +15,7 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Dawntrail.TheStrayboroughDeadwalk;
 
-[ScriptType(guid: "32BC9D47-D623-507F-CDBF-E17EFEA73FA4", name: "噩梦乐园迷途鬼区", territorys: [1204], version: "0.0.0.3", author:"Cyf5119")]
+[ScriptType(guid: "32BC9D47-D623-507F-CDBF-E17EFEA73FA4", name: "噩梦乐园迷途鬼区", territorys: [1204], version: "0.0.0.4", author:"Cyf5119")]
 public class TheStrayboroughDeadwalk
 {
     private List<Vector3> tethered = [];
@@ -116,8 +116,7 @@ public class TheStrayboroughDeadwalk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
 
-    [ScriptMethod(name: "好脑袋的朋友们清除", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:7740"],
-        userControl: false)]
+    [ScriptMethod(name: "好脑袋的朋友们清除", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:7740"], userControl: false)]
     public void Boss1FriendsClear(Event @event, ScriptAccessory accessory)
     {
         if (JsonConvert.DeserializeObject<uint>(@event["SourceDataId"]) != 16827) return;
@@ -141,8 +140,7 @@ public class TheStrayboroughDeadwalk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "好脑袋清除", eventType: EventTypeEnum.ActionEffect,
-        eventCondition: ["ActionId:regex:^(3653[26])$"])]
+    [ScriptMethod(name: "好脑袋清除", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(3653[26])$"], userControl: false)]
     public void Boss1HeadsClear(Event @event, ScriptAccessory accessory)
     {
         ParseObjectId(@event["SourceId"], out var sid);
@@ -177,7 +175,7 @@ public class TheStrayboroughDeadwalk
         }
     }
 
-    [ScriptMethod(name: "连线清除", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:36720"])]
+    [ScriptMethod(name: "连线清除", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:36720"], userControl: false)]
     public void Boss2TetheredClear(Event @event, ScriptAccessory accessory)
     {
         tethered.Clear();
@@ -274,8 +272,7 @@ public class TheStrayboroughDeadwalk
         accessory.Method.TextInfo("流血AOE", duration: 5000);
     }
 
-    [ScriptMethod(name: "老三分摊记录", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:37144"],
-        userControl: false)]
+    [ScriptMethod(name: "老三分摊记录", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:37144"], userControl: false)]
     public void Boss3ShareRecord(Event @event, ScriptAccessory accessory)
     {
         ParseObjectId(@event["TargetId"], out var tid);

@@ -16,7 +16,7 @@
   {
     "Name": "噩梦乐园迷途鬼区",
     "Guid": "32BC9D47-D623-507F-CDBF-E17EFEA73FA4",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Cyf5119",
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/TheStrayboroughDeadwalk.cs"
   },
@@ -32,14 +32,14 @@
     "Guid": "4FD21978-B76C-4BF7-A3F5-D0490BB51915",
     "Version": "0.0.0.1",
     "Author": "Cyf5119",
-    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M2n.cs"
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M1n.cs"
   },
   {
     "Name": "M3n",
     "Guid": "AA6A8D8A-4462-41A2-B500-90515DE6534A",
     "Version": "0.0.0.1",
     "Author": "Cyf5119",
-    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M3n.cs"
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M1n.cs"
   },
   {
     "Name": "AalBomb",
