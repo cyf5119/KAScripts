@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Numerics;
-// using System.Runtime.Intrinsics.Arm;
 using System.Collections.Generic;
 using System.Threading;
 using Newtonsoft.Json;
@@ -11,7 +10,7 @@ using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 
-namespace Cyf5119Script;
+namespace Cyf5119Script.Dawntrail.Alexandria;
 
 [ScriptType(guid: "243443E4-FC8E-3EA6-9A75-FD2A4B6990FF", name: "忆中金曦亚历山德里亚", territorys: [1199], version: "0.0.0.2", author: "Cyf5119")]
 public class Alexandria

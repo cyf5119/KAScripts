@@ -12,7 +12,7 @@ using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 
-namespace Cyf5119Script;
+namespace Cyf5119Script.Dawntrail.M1n;
 
 [ScriptType(guid: "28EEE8DC-DA6A-3F91-0D0C-7AA1BFB49AB0", name: "M1n", territorys: [1225], version: "0.0.0.1", author: "Cyf5119")]
 public class M1n

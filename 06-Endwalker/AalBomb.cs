@@ -13,7 +13,7 @@ using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 
-namespace Cyf5119Script;
+namespace Cyf5119Script.Endwalker.AalBomb;
 
 [ScriptType(guid: "2F27EFB2-CE87-4E6A-9D83-60FE4CC26141", name: "AalBomb", territorys: [1179, 1180], version: "0.0.0.1", author: "Cyf5119")]
 public class AalBomb
