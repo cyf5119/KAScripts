@@ -15,13 +15,15 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Dawntrail.TheStrayboroughDeadwalk;
 
-[ScriptType(guid: "32BC9D47-D623-507F-CDBF-E17EFEA73FA4", name: "噩梦乐园迷途鬼区", territorys: [1204], version: "0.0.0.4", author:"Cyf5119")]
+[ScriptType(guid: "32BC9D47-D623-507F-CDBF-E17EFEA73FA4", name: "噩梦乐园迷途鬼区", territorys: [1204], version: "0.0.0.5", author:"Cyf5119")]
 public class TheStrayboroughDeadwalk
 {
+    [UserSetting(note:"好脑袋的朋友提示时间（毫秒）")]
+    public int Prop1 { get; set; } = 60000;
+    
     private List<Vector3> tethered = [];
     private uint stackRecord = 0;
-
-
+    
     public void Init(ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw(".*");
@@ -102,7 +104,7 @@ public class TheStrayboroughDeadwalk
         var dp = accessory.Data.GetDefaultDrawProperties();
         ParseObjectId(@event["SourceId"], out var sid);
 
-        dp.DestoryAt = 30000;
+        dp.DestoryAt = Prop1;
         dp.Owner = sid;
 
         dp.Name = $"好脑袋的朋友 {sid} 一";
@@ -116,10 +118,20 @@ public class TheStrayboroughDeadwalk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
 
-    [ScriptMethod(name: "好脑袋的朋友们清除", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:7740"], userControl: false)]
-    public void Boss1FriendsClear(Event @event, ScriptAccessory accessory)
+    // 退场
+    [ScriptMethod(name: "好脑袋的朋友们清除一", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:7740"], userControl: false)]
+    public void Boss1FriendsClear1(Event @event, ScriptAccessory accessory)
     {
         if (JsonConvert.DeserializeObject<uint>(@event["SourceDataId"]) != 16827) return;
+        ParseObjectId(@event["SourceId"], out var sid);
+        accessory.Method.RemoveDraw($"好脑袋的朋友 {sid} 一");
+        accessory.Method.RemoveDraw($"好脑袋的朋友 {sid} 二");
+    }
+    
+    // 保住人了
+    [ScriptMethod(name: "好脑袋的朋友们清除二", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:36535"], userControl: false)]
+    public void Boss1FriendsClear2(Event @event, ScriptAccessory accessory)
+    {
         ParseObjectId(@event["SourceId"], out var sid);
         accessory.Method.RemoveDraw($"好脑袋的朋友 {sid} 一");
         accessory.Method.RemoveDraw($"好脑袋的朋友 {sid} 二");

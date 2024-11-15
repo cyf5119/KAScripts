@@ -16,9 +16,10 @@
   {
     "Name": "噩梦乐园迷途鬼区",
     "Guid": "32BC9D47-D623-507F-CDBF-E17EFEA73FA4",
-    "Version": "0.0.0.4",
+    "Version": "0.0.0.5",
     "Author": "Cyf5119",
-    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/TheStrayboroughDeadwalk.cs"
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/TheStrayboroughDeadwalk.cs",
+    "UpdateInfo": "1. 好脑袋的朋友抱住人后清除画图。\n2. 延长了好脑袋的朋友的显示时间，且此值可在设置调整。"
   },
   {
     "Name": "M1n",
