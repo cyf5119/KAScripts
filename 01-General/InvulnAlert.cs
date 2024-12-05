@@ -14,7 +14,7 @@ using KodakkuAssist.Module.Draw;
 
 namespace KAScript.Cyf5119Script.General.InvulnAlert;
 
-[ScriptType(guid: "FCDCA220-DA96-48B5-909B-C1E336671D54", name: "InvulnAlert", territorys: [], version: "0.0.0.1", author: "Cyf5119", note: "无敌倒计时")]
+[ScriptType(guid: "FCDCA220-DA96-48B5-909B-C1E336671D54", name: "无敌提示宏", territorys: [], version: "0.0.0.2", author: "Cyf5119", note: "自身无敌倒计时提示。")]
 public class InvulnAlert
 {
     [UserSetting("频道")] public string channel { get; set; } = "e";
