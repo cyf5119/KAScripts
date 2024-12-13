@@ -1,5 +1,12 @@
 [
   {
+    "Name": "艳翼蛇鸟歼灭战",
+    "Guid": "E9ABB865-498F-4C4F-8071-8A2E9F0589F6",
+    "Version": "0.0.0.1",
+    "Author": "Cyf5119",
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/WorqorLarDor.cs"
+  },
+  {
     "Name": "忆中金曦亚历山德里亚",
     "Guid": "243443E4-FC8E-3EA6-9A75-FD2A4B6990FF",
     "Version": "0.0.0.2",
