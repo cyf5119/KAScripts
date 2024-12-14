@@ -12,7 +12,7 @@ using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 
-namespace KAScript.Cyf5119Script.Dawntrail.WorqorLarDor;
+namespace Cyf5119Script.Dawntrail.WorqorLarDor;
 
 [ScriptType(guid: "E9ABB865-498F-4C4F-8071-8A2E9F0589F6", name: "艳翼蛇鸟歼灭战", territorys: [1195], version: "0.0.0.1", author:"Cyf5119")]
 public class WorqorLarDor

@@ -12,7 +12,7 @@ using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 
-namespace KAScript.Cyf5119Script.General.InvulnAlert;
+namespace Cyf5119Script.General.InvulnAlert;
 
 [ScriptType(guid: "FCDCA220-DA96-48B5-909B-C1E336671D54", name: "无敌提示宏", territorys: [], version: "0.0.0.2", author: "Cyf5119", note: "自身无敌倒计时提示。")]
 public class InvulnAlert

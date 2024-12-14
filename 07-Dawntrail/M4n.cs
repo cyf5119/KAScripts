@@ -12,7 +12,7 @@ using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 
-namespace KAScript.Cyf5119Script.Dawntrail.M4n;
+namespace Cyf5119Script.Dawntrail.M4n;
 
 [ScriptType(guid: "F4A95B34-AE13-40E4-9106-78D607BCFD57", name: "M4n", territorys: [1231], version: "0.0.0.1",
     author: "Cyf5119")]

@@ -8,7 +8,6 @@ using Dalamud.Utility.Numerics;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
-using FFXIVClientStructs.FFXIV.Common.Component.BGCollision;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;

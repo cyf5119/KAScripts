@@ -1,5 +1,40 @@
 [
   {
+    "Name": "无敌提示宏",
+    "Guid": "FCDCA220-DA96-48B5-909B-C1E336671D54",
+    "Version": "0.0.0.2",
+    "Author": "Cyf5119",
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/01-General/InvulnAlert.cs"
+  },
+  {
+    "Name": "泰坦歼灭战",
+    "Guid": "BC3B91DA-224A-4356-B7B3-75A8366A2C1C",
+    "Version": "0.0.0.1",
+    "Author": "Cyf5119",
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/02-ARealmReborn/TheNavel.cs"
+  },
+  {
+    "Name": "O10n",
+    "Guid": "9248BFE3-D4AE-46AA-9111-AEC2DACDE893",
+    "Version": "0.0.0.1",
+    "Author": "Cyf5119",
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/04-Stormblood/O10n.cs"
+  },
+  {
+    "Name": "终结之战",
+    "Guid": "2BEBDA4A-DA6A-4B54-B9B8-533F34B3A2EB",
+    "Version": "0.0.0.1",
+    "Author": "Cyf5119",
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/06-Endwalker/TheFinalDay.cs"
+  },
+  {
+    "Name": "巴尔巴莉希娅歼灭战",
+    "Guid": "776A7DFB-F8C3-4ECC-BFB7-3631D083A117",
+    "Version": "0.0.0.1",
+    "Author": "Cyf5119",
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/06-Endwalker/StormsCrown.cs"
+  },
+  {
     "Name": "艳翼蛇鸟歼灭战",
     "Guid": "E9ABB865-498F-4C4F-8071-8A2E9F0589F6",
     "Version": "0.0.0.1",
@@ -56,6 +91,7 @@
     "Author": "Cyf5119",
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M4n.cs"
   },
+  
   {
     "Name": "AalBomb",
     "Guid": "2F27EFB2-CE87-4E6A-9D83-60FE4CC26141",
@@ -63,13 +99,5 @@
     "Author": "Cyf5119",
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/06-Endwalker/AalBomb.cs",
     "UpdateInfo": "阿罗阿罗岛老三炸弹。"
-  },
-  {
-    "Name": "无敌提示宏",
-    "Guid": "FCDCA220-DA96-48B5-909B-C1E336671D54",
-    "Version": "0.0.0.2",
-    "Author": "Cyf5119",
-    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/01-General/InvulnAlert.cs",
-    "UpdateInfo": "一个绿绿的无敌倒计时提示。"
   }
 ]

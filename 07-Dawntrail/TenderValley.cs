@@ -241,8 +241,7 @@ namespace Cyf5119Script.Dawntrail.TenderValley
             accessory.Method.TextInfo("死刑", duration: 5000);
         }
 
-        [ScriptMethod(name: "老三分摊id获取1", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:003E"],
-            userControl: false)]
+        [ScriptMethod(name: "老三分摊id获取1", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:003E"], userControl: false)]
         public void 老三分摊id获取1(Event @event, ScriptAccessory accessory)
         {
             if (ParseObjectId(@event["TargetId"], out var tid))
@@ -251,8 +250,7 @@ namespace Cyf5119Script.Dawntrail.TenderValley
             }
         }
 
-        [ScriptMethod(name: "老三分摊id获取2", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:021E"],
-            userControl: false)]
+        [ScriptMethod(name: "老三分摊id获取2", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:021E"], userControl: false)]
         public void 老三分摊id获取2(Event @event, ScriptAccessory accessory)
         {
             if (ParseObjectId(@event["TargetId"], out var tid))
@@ -261,8 +259,7 @@ namespace Cyf5119Script.Dawntrail.TenderValley
             }
         }
 
-        [ScriptMethod(name: "老三分摊id获取3", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:021F"],
-            userControl: false)]
+        [ScriptMethod(name: "老三分摊id获取3", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:021F"], userControl: false)]
         public void 老三分摊id获取3(Event @event, ScriptAccessory accessory)
         {
             if (ParseObjectId(@event["TargetId"], out var tid))
