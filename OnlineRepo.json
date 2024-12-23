@@ -89,7 +89,8 @@
     "Guid": "F4A95B34-AE13-40E4-9106-78D607BCFD57",
     "Version": "0.0.0.1",
     "Author": "Cyf5119",
-    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M4n.cs"
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M4n.cs",
+    "UpdateInfo": "优化了多重分身释放半场刀时的绘制。"
   },
   
   {
