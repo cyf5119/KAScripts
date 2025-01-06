@@ -3,6 +3,7 @@ using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
@@ -14,7 +15,7 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Dawntrail.M1n;
 
-[ScriptType(guid: "28EEE8DC-DA6A-3F91-0D0C-7AA1BFB49AB0", name: "M1n", territorys: [1225], version: "0.0.0.1", author: "Cyf5119")]
+[ScriptType(guid: "28EEE8DC-DA6A-3F91-0D0C-7AA1BFB49AB0", name: "M1n", territorys: [1225], version: "0.0.0.2", author: "Cyf5119")]
 public class M1n
 {
     private uint tethered = 0;
@@ -193,11 +194,11 @@ public class M1n
     }
     
     [ScriptMethod(name: "猫跳二连尖甲", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(3766[3456])$"])]
-    public void LeapingOneTwoPaw(Event @event, ScriptAccessory accessory)
+    public async void LeapingOneTwoPaw(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         var aid = JsonConvert.DeserializeObject<uint>(@event["ActionId"]);
-        Thread.Sleep(500);
+        await Task.Delay(500);
         var tid = tethered;
 
         bool isLeftFirst = aid % 2 == 0;
@@ -216,12 +217,12 @@ public class M1n
     }
     
     [ScriptMethod(name: "猫跳交叉尖甲", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(37673|38928)$"])]
-    public void LeapingBlackCatCrossing(Event @event, ScriptAccessory accessory)
+    public async void LeapingBlackCatCrossing(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         // var aid = JsonConvert.DeserializeObject<uint>(@event["ActionId"]);
         if (!ParseObjectId(@event["SourceId"], out var sid)) return;
-        Thread.Sleep(500);
+        await Task.Delay(500);
         var tid = tethered;
         var obj = accessory.Data.Objects.SearchByEntityId(sid);
         if (obj is null) return;

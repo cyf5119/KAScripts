@@ -16,11 +16,9 @@ using KodakkuAssist.Module.Draw;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using Lumina.Excel.GeneratedSheets2;
 
-// using Lumina.Excel.GeneratedSheets2;
-
 namespace Cyf5119Script.Dev.AutoDraw
 {
-    [ScriptType(guid: "{FC02EEF5-5F68-2EF1-A41D-C8FC18346376}", name: "AutoDraw", territorys: [], version: "0.0.0.2")]
+    // [ScriptType(guid: "{FC02EEF5-5F68-2EF1-A41D-C8FC18346376}", name: "AutoDraw", territorys: [], version: "0.0.0.2")]
     public class AutoDraw
     {
         [UserSetting(note: "Show friend (true/false)")]
@@ -53,9 +51,8 @@ namespace Cyf5119Script.Dev.AutoDraw
             if (castType == 1) return; // 1 is single target cast
             
             var source = GetObjById(sid);
+            if (source == null) return;
             var target = GetObjById(tid);
-            // var source = Svc.Objects.Where(x => x.GameObjectId == sid).FirstOrDefault();
-            // var target = Svc.Objects.Where(x => x.GameObjectId == tid).FirstOrDefault();
             
             if (castType >= 3 && castType <= 5) // deal fan = 3, laser = 4 , around = 5 with source radius extra
                 range += source.HitboxRadius;

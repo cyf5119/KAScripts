@@ -3,6 +3,7 @@ using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using ECommons;
@@ -14,7 +15,7 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Dawntrail.TheStrayboroughDeadwalk;
 
-[ScriptType(guid: "32BC9D47-D623-507F-CDBF-E17EFEA73FA4", name: "噩梦乐园迷途鬼区", territorys: [1204], version: "0.0.0.5", author:"Cyf5119")]
+[ScriptType(guid: "32BC9D47-D623-507F-CDBF-E17EFEA73FA4", name: "噩梦乐园迷途鬼区", territorys: [1204], version: "0.0.0.6", author:"Cyf5119")]
 public class TheStrayboroughDeadwalk
 {
     [UserSetting(note:"好脑袋的朋友提示时间（毫秒）")]
@@ -75,7 +76,7 @@ public class TheStrayboroughDeadwalk
     }
 
     [ScriptMethod(name: "老一追踪AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:39686"])]
-    public void Boss1ChasingAoe(Event @event, ScriptAccessory accessory)
+    public async void Boss1ChasingAoe(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
@@ -86,14 +87,14 @@ public class TheStrayboroughDeadwalk
         
         var target = FakeParty.Get().MinBy(x => Vector3.Distance(pos, x.Position));
         if (target is null) return;
-        Thread.Sleep(2000);
+        await Task.Delay(2000);
         for (int i = 0; i < 4; i++)
         {
             var tpos = target.Position;
             pos += Vector3.Normalize(tpos - pos) * 3;
             dp.Position = pos;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-            Thread.Sleep(1600);
+            await Task.Delay(1600);
         }
     }
 
@@ -291,7 +292,7 @@ public class TheStrayboroughDeadwalk
     }
 
     [ScriptMethod(name: "老三分摊", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:37142"])]
-    public void Boss3Share(Event @event, ScriptAccessory accessory)
+    public async void Boss3Share(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         ParseObjectId(@event["SourceId"], out var sid);
@@ -301,7 +302,7 @@ public class TheStrayboroughDeadwalk
         dp.DestoryAt = 5000;
         dp.Owner = sid;
         
-        Thread.Sleep(100);
+        await Task.Delay(100);
         dp.TargetObject = stackRecord;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }

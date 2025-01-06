@@ -3,6 +3,7 @@ using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
@@ -15,7 +16,7 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Stormblood.O10n;
 
-[ScriptType(guid: "9248BFE3-D4AE-46AA-9111-AEC2DACDE893", name: "O10n", territorys: [799], version: "0.0.0.1", author: "Cyf5119")]
+[ScriptType(guid: "9248BFE3-D4AE-46AA-9111-AEC2DACDE893", name: "O10n", territorys: [799], version: "0.0.0.2", author: "Cyf5119")]
 public class O10n
 {
     private bool IsCross = false;
@@ -125,7 +126,7 @@ public class O10n
     }
     
     [ScriptMethod(name: "真红射线", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:9290"])]
-    public void ScarletThread(Event @event, ScriptAccessory accessory)
+    public async void ScarletThread(Event @event, ScriptAccessory accessory)
     {
         if (TimeLock) return;
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -135,9 +136,9 @@ public class O10n
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(4, 80);
         accessory.Method.SendDraw(0, DrawTypeEnum.Rect, dp);
-        Thread.Sleep(1000);
+        await Task.Delay(1000);
         TimeLock = true;
-        Thread.Sleep(2000);
+        await Task.Delay(2000);
         TimeLock = false;
     }
     

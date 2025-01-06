@@ -210,7 +210,7 @@ public static class EventExtensions
 
     public static uint StatusId(this Event @event)
     {
-        return JsonConvert.DeserializeObject<uint>(@event["StatusId"]);
+        return JsonConvert.DeserializeObject<uint>(@event["StatusID"]);
     }
 
     public static uint StackCount(this Event @event)

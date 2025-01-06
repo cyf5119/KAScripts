@@ -16,9 +16,10 @@
   {
     "Name": "O10n",
     "Guid": "9248BFE3-D4AE-46AA-9111-AEC2DACDE893",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Cyf5119",
-    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/04-Stormblood/O10n.cs"
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/04-Stormblood/O10n.cs",
+    "UpdateInfo": "修改休眠逻辑。"
   },
   {
     "Name": "终结之战",
@@ -44,9 +45,10 @@
   {
     "Name": "忆中金曦亚历山德里亚",
     "Guid": "243443E4-FC8E-3EA6-9A75-FD2A4B6990FF",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Cyf5119",
-    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/Alexandria.cs"
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/Alexandria.cs",
+    "UpdateInfo": "修改休眠逻辑。"
   },
   {
     "Name": "荒野秘境仙人刺谷",
@@ -58,17 +60,18 @@
   {
     "Name": "噩梦乐园迷途鬼区",
     "Guid": "32BC9D47-D623-507F-CDBF-E17EFEA73FA4",
-    "Version": "0.0.0.5",
+    "Version": "0.0.0.6",
     "Author": "Cyf5119",
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/TheStrayboroughDeadwalk.cs",
-    "UpdateInfo": "1. 好脑袋的朋友抱住人后清除画图。\n2. 延长了好脑袋的朋友的显示时间，且此值可在设置调整。"
+    "UpdateInfo": "修改休眠逻辑。"
   },
   {
     "Name": "M1n",
     "Guid": "28EEE8DC-DA6A-3F91-0D0C-7AA1BFB49AB0",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Cyf5119",
-    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M1n.cs"
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M1n.cs",
+    "UpdateInfo": "修改休眠逻辑。"
   },
   {
     "Name": "M2n",
@@ -96,9 +99,9 @@
   {
     "Name": "AalBomb",
     "Guid": "2F27EFB2-CE87-4E6A-9D83-60FE4CC26141",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Cyf5119",
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/06-Endwalker/AalBomb.cs",
-    "UpdateInfo": "阿罗阿罗岛老三炸弹。"
+    "UpdateInfo": "修改休眠逻辑。"
   }
 ]

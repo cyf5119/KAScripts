@@ -3,6 +3,7 @@ using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using ECommons;
@@ -12,7 +13,7 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Dawntrail.Alexandria;
 
-[ScriptType(guid: "243443E4-FC8E-3EA6-9A75-FD2A4B6990FF", name: "忆中金曦亚历山德里亚", territorys: [1199], version: "0.0.0.2", author: "Cyf5119")]
+[ScriptType(guid: "243443E4-FC8E-3EA6-9A75-FD2A4B6990FF", name: "忆中金曦亚历山德里亚", territorys: [1199], version: "0.0.0.3", author: "Cyf5119")]
 public class Alexandria
 {
     private List<List<uint>> InterferonList = [];
@@ -98,9 +99,9 @@ public class Alexandria
     }
 
     [ScriptMethod(name: "老一十字与月环后续", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(3638[23])$"])]
-    public void Boss1CrossAndDonutEffect(Event @event, ScriptAccessory accessory)
+    public async void Boss1CrossAndDonutEffect(Event @event, ScriptAccessory accessory)
     {
-        Thread.Sleep(1000);
+        await Task.Delay(1000);
         DrawCrossAndDonut(accessory);
     }
 
@@ -181,7 +182,7 @@ public class Alexandria
     public void Boss2Rect2(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        if (!ParseObjectId(@event["SourceId"], out var sid)) return;
+        // if (!ParseObjectId(@event["SourceId"], out var sid)) return;
         var epos = JsonConvert.DeserializeObject<Vector3>(@event["EffectPosition"]);
         var rot = JsonConvert.DeserializeObject<float>(@event["TargetRotation"]);
         dp.Name = "老二辣翅";
