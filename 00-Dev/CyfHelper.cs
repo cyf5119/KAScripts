@@ -209,6 +209,11 @@ public static class IbcHelper
     {
         return Svc.Objects.Where(x => x.DataId == dataId).FirstOrDefault();
     }
+    
+    public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
+    {
+        return Svc.Objects.Where(x => x.DataId == dataId);
+    }
 }
 
 public static unsafe class IBattleCharaExtensions
@@ -225,5 +230,11 @@ public static unsafe class IBattleCharaExtensions
     
 }
 
-
+public static class MathHelper
+{
+    public static Vector3 YRotate(this Vector3 v, float angle)
+    {
+        return Vector3.Transform(v, Matrix4x4.CreateRotationY(float.Pi / 180 * angle));
+    }
+}
 
