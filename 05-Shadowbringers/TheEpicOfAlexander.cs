@@ -17,22 +17,38 @@ using KodakkuAssist.Module.Draw.Manager;
 
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
-[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战.未完工", territorys: [887], version: "0.0.0.1", author: "Cyf5119")]
+[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战.未完工", territorys: [887], version: "0.0.0.2", author: "Cyf5119")]
 public class TheEpicOfAlexander
 {
     private static readonly Vector3 Center = new Vector3(100, 0, 100);
-
+    
     private Dictionary<uint, uint> _p1Tether = [];
+
+    private uint _p4FinalWordLightPlayer;
+    private uint _p4FinalWordDarkPlayer;
+    private Dictionary<uint, uint> _p4ShadowDict = new ();
+    private List<uint> _p4ShadowPlayers = new ();
+    private bool[] _p4OrdainList = [false, false];
+    private List<Vector3> _p4AlmightyJudgments = new();
     
     public void Init(ScriptAccessory accessory)
     {
         _p1Tether = [];
+        
+        _p4FinalWordLightPlayer = 0;
+        _p4FinalWordDarkPlayer = 0;
+        _p4ShadowDict.Clear();
+        _p4ShadowPlayers.Clear();
+        _p4OrdainList = [false, false];
+        _p4AlmightyJudgments.Clear();
+        
         accessory.Method.RemoveDraw(".*");
+        
         Fluid.Reset();
         LimitCut.Reset();
         HawkBlaster.Reset();
     }
-
+    
     #region P1
 
     private static class Fluid
@@ -44,17 +60,19 @@ public class TheEpicOfAlexander
         public static void Start(ScriptAccessory accessory)
         {
             // P1 水基佬 平A 比开怪时间略晚？
+            // -60+42.172
             if (_state != 0) return;
             _state = 1;
             Draw(accessory);
         }
 
-        private static void Draw(ScriptAccessory accessory)
+        private async static void Draw(ScriptAccessory accessory)
         {
             var state = _state;
             var sleepTime = new List<int> { 0, 5200, 26300, 19100 };
             if (state < 1 || state > 3) return;
-            Thread.Sleep(sleepTime[state]);
+            // Thread.Sleep(sleepTime[state]);
+            await Task.Delay(sleepTime[state]);
             if (state != _state) return;
             DrawLiquid(accessory);
             if (state != 1)
@@ -64,6 +82,7 @@ public class TheEpicOfAlexander
         private static void DrawHand(ScriptAccessory accessory)
         {
             // 流体强袭 18871 手 10
+            // 60+18.729 60+37.995
             var hand = IbcHelper.GetFirstByDataId(0x2C48)?.EntityId ?? 0;
             var dp = accessory.FastDp("hand", hand, 5200, 10);
             accessory.Method.SendDraw(0, DrawTypeEnum.Fan, dp);
@@ -71,7 +90,9 @@ public class TheEpicOfAlexander
         
         private static void DrawLiquid(ScriptAccessory accessory)
         {
-            //  流体摆动 18864 人 8
+            // 
+            // 流体摆动 18864 人 8
+            // 52.359 60+18.630 60+37.761 
             var liquid = IbcHelper.GetFirstByDataId(0x2C47)?.EntityId ?? 0;
             var dp = accessory.FastDp("liquid", liquid, 5000, 8);
             accessory.Method.SendDraw(0, DrawTypeEnum.Fan, dp);
@@ -145,14 +166,14 @@ public class TheEpicOfAlexander
     [ScriptMethod(EventTypeEnum.AddCombatant, "栓塞", ["DataId:11339"])]
     public void Embolus(Event @event, ScriptAccessory accessory)
     {
-        var dp = accessory.FastDp("embolus", @event.SourceId(), 20000, 1);
+        var dp = accessory.FastDp("embolus", @event.SourceId(), 30000, 1);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
 
     [ScriptMethod(EventTypeEnum.Tether, "排水", ["Id:0003"])]
     public void Drainage(Event @event, ScriptAccessory accessory)
     {
-        // 18471
+        // 18471 7.3s
         var sid = @event.SourceId();
         var tid = @event.TargetId();
         lock (_p1Tether)
@@ -165,8 +186,9 @@ public class TheEpicOfAlexander
             else
                 _p1Tether.Add(sid, tid);
 
-            var dp = accessory.FastDp($"Drainage {sid} {tid}", tid, 15000, 6);
+            var dp = accessory.FastDp($"Drainage {sid} {tid}", tid, 10000, 6);
             accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
+            // dp.CentreResolvePattern = PositionResolvePatternEnum.TetherTarget;
         }
     }
 
@@ -218,7 +240,7 @@ public class TheEpicOfAlexander
     [ScriptMethod(EventTypeEnum.TargetIcon, "麻将记录", ["Id:regex:^(00(4F|5[0123456]))$"])]
     public void LimitCutRecord(Event @event, ScriptAccessory accessory) => LimitCut.OnTargetIcon(@event);
 
-    [ScriptMethod(EventTypeEnum.PlayActionTimeline, "麻将执行", ["Id:7747"])]
+    [ScriptMethod(EventTypeEnum.PlayActionTimeline, "麻将执行", ["Id:7747", "SourceDataId:11342"])]
     public void LimitCutPlay(Event @event, ScriptAccessory accessory) => LimitCut.OnPlayActionTimeline(@event, accessory);
 
     private static class HawkBlaster
@@ -232,7 +254,6 @@ public class TheEpicOfAlexander
         {
             //  鹰式破坏炮 18480 间隔2.2s 10m圆形
             LimitCut.Enabled = true;
-            if (@event.TargetIndex() != 1) return;
             lock (_locker)
             {
                 _state++;
@@ -264,7 +285,7 @@ public class TheEpicOfAlexander
         }
     }
 
-    [ScriptMethod(EventTypeEnum.ActionEffect, "P1.5地火", ["ActionId:18480"])]
+    [ScriptMethod(EventTypeEnum.ActionEffect, "P1.5地火", ["ActionId:18480", "TargetIndex:1"])]
     public void HawkBlasterStart(Event @event, ScriptAccessory accessory) => HawkBlaster.Start(@event, accessory);
 
     #endregion
@@ -353,7 +374,7 @@ public class TheEpicOfAlexander
     public void SuperJump(Event @event, ScriptAccessory accessory)
     {
         // 第一个读条是3.9秒
-        var dp = accessory.FastDp("Super Jump", new Vector3(0), 4300, 10);
+        var dp = accessory.FastDp("Super Jump", new Vector3(0), 4200, 10);
         dp.CentreResolvePattern = PositionResolvePatternEnum.PlayerFarestOrder;
         dp.CentreOrderIndex = 1;
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
@@ -380,9 +401,9 @@ public class TheEpicOfAlexander
         var dp = accessory.FastDp("Alpha Sword", CruiseChaser.EntityId, duration, 25+5);
         dp.Delay = delay;
         dp.TargetResolvePattern = PositionResolvePatternEnum.PlayerNearestOrder;
-        for (uint i = 1; i < 4; i++)
+        for (uint i = 0; i < 3; i++)
         {
-            dp.TargetOrderIndex = i;
+            dp.TargetOrderIndex = i + 1;
             dp.DestoryAt = duration + i * 1100;
             accessory.Method.SendDraw(0, DrawTypeEnum.Fan, dp);
         }
@@ -396,9 +417,9 @@ public class TheEpicOfAlexander
         var dp = accessory.FastDp("Flare Thrower", BruteJustice.EntityId, duration, 100);
         dp.Delay = delay;
         dp.TargetResolvePattern = PositionResolvePatternEnum.PlayerNearestOrder;
-        for (uint i = 1; i < times+1; i++)
+        for (uint i = 0; i < times; i++)
         {
-            dp.TargetOrderIndex = i;
+            dp.TargetOrderIndex = i + 1;
             dp.DestoryAt = duration + i * 2300;
             accessory.Method.SendDraw(0, DrawTypeEnum.Fan, dp);
         }
@@ -474,17 +495,383 @@ public class TheEpicOfAlexander
 
     #region P4
 
-    [ScriptMethod(EventTypeEnum.StartCasting, "株连", ["ActionId:18580"])]
-    public void IrresistibleGrace(Event @event, ScriptAccessory accessory)
+    // FinalWord
+    
+    [ScriptMethod(EventTypeEnum.StatusAdd, "0.5测大光", ["StatusID:2153"])]
+    public void FinalWordContactRegulation(Event @event, ScriptAccessory accessory)
     {
-        var dp = accessory.FastDp("Irresistible Grace", @event.TargetId(), 5000, 6);
-        dp.Color = accessory.Data.DefaultSafeColor;
+        var actor = _p4FinalWordLightPlayer = @event.TargetId();
+        if (actor != accessory.Data.Me) return;
+
+        var dp = accessory.WaypointDp(new Vector3(100, 0, 81), 10000);
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(EventTypeEnum.StatusAdd, "0.5测大暗", ["StatusID:2155"])]
+    public void FinalWordEscapeDetection(Event @event, ScriptAccessory accessory)
+    {
+        var actor = _p4FinalWordDarkPlayer = @event.TargetId();
+        if (actor != accessory.Data.Me) return;
+        
+        var dp = accessory.WaypointDp(new Vector3(100, 0, 114), 10000);
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(EventTypeEnum.StatusAdd, "0.5测小光", ["StatusID:2152"])]
+    public async void FinalWordContactProhibition(Event @event, ScriptAccessory accessory)
+    {
+        var actor = @event.TargetId();
+        if (actor != accessory.Data.Me) return;
+        
+        var dp = accessory.WaypointDp(new Vector3(100, 0, 112), 10000);
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+        
+        await Task.Delay(100);
+        if (_p4FinalWordLightPlayer == 0) return;
+        
+        dp = accessory.FastDp("小光", actor, 9900, new Vector2(2, 20), true);
+        dp.TargetObject = _p4FinalWordLightPlayer;
+        accessory.Method.SendDraw(0, DrawTypeEnum.Displacement, dp);
+        
+        dp = accessory.FastDp("大光", _p4FinalWordLightPlayer, 9900, 22);
+        dp.InnerScale = new Vector2(21.8f);
+        dp.Radian = float.Pi * 2;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(EventTypeEnum.StatusAdd, "0.5测小暗", ["StatusID:2154"])]
+    public async void FinalWordEscapeProhibition(Event @event, ScriptAccessory accessory)
+    {
+        var actor = @event.TargetId();
+        if (actor != accessory.Data.Me) return;
+        
+        var dp = accessory.WaypointDp(new Vector3(100, 0, 112), 10000);
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+        
+        await Task.Delay(100);
+        if (_p4FinalWordDarkPlayer == 0) return;
+        
+        dp = accessory.FastDp("小暗", actor, 9900, new Vector2(2, 20), true);
+        dp.TargetObject = _p4FinalWordDarkPlayer;
+        dp.Rotation = float.Pi;
+        accessory.Method.SendDraw(0, DrawTypeEnum.Displacement, dp);
+        
+        dp = accessory.FastDp("大暗", _p4FinalWordDarkPlayer, 9900, 5, true);
+        dp.InnerScale = new Vector2(4.8f);
+        dp.Radian = float.Pi * 2;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Donut, dp);
+    }
+
+    [ScriptMethod(EventTypeEnum.StartCasting, "0.5测动", ["ActionId:18558"])]
+    public void OrdainedMotion(Event @event, ScriptAccessory accessory) => accessory.Method.TextInfo("动", 4000, true);
+
+    [ScriptMethod(EventTypeEnum.StartCasting, "0.5测静", ["ActionId:18559"])]
+    public void OrdainedStillness(Event @event, ScriptAccessory accessory) => accessory.Method.TextInfo("静", 4000, true);
+    
+    // FateProjection
+    
+    [ScriptMethod(EventTypeEnum.Tether, "P4幻影连线记录", ["Id:0062"], false)]
+    public void ShadowsRecord(Event @event, ScriptAccessory accessory)
+    {
+        lock (_p4ShadowDict)
+        {
+            _p4ShadowDict.Add(@event.SourceId(), @event.TargetId());
+            if (_p4ShadowDict.Count > 7)
+            {
+                _p4ShadowDict = _p4ShadowDict.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+                _p4ShadowPlayers = _p4ShadowDict.Keys.ToList();
+                
+                // DEBUG
+                // string str = "";
+                // foreach (var eid in _p4ShadowPlayers)
+                // {
+                //     var actor = accessory.Data.Objects.SearchByEntityId(eid);
+                //     str += actor.Name + "  ";
+                // }
+                // accessory.Method.SendChat("/e "+str);
+            }
+        }
+    }
+    
+    [ScriptMethod(EventTypeEnum.StartCasting, "P4幻影连线记录清除", ["ActionId:18578"], false)]
+    public void ShadowsReset(Event @event, ScriptAccessory accessory)
+    {
+        _p4ShadowDict.Clear();
+        _p4ShadowPlayers.Clear();
+    }
+
+    private bool GetIndex(uint id, out int index)
+    {
+        if (!_p4ShadowPlayers.Contains(id))
+        {
+            index = 0;
+            return false;
+        }
+        index = _p4ShadowPlayers.IndexOf(id);
+        return true;
+    }
+    
+    // Alpha
+    
+    [ScriptMethod(EventTypeEnum.StartCasting, "1测1", ["ActionId:18556"])]
+    public void FateCalibrationAlpha(Event @event, ScriptAccessory accessory)
+    {
+        // 未来确定α
+        // 0为分摊 1为大圈 234为电 567无
+        if(!GetIndex(accessory.Data.Me, out var myidx)) return;
+        var wpos = myidx == 1 ? new Vector3(100, 0, 81) : new Vector3(100, 0, 119);
+        
+        var dp = accessory.WaypointDp(wpos, 10000);
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+        
+        dp = accessory.FastDp("一测大圈", _p4ShadowPlayers[1], 32200, 30);
+        dp.InnerScale = new Vector2(29.8f);
+        dp.Rotation = float.Pi * 2;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Donut, dp);
+
+        var isStack = myidx < 1 || myidx > 4;
+        dp = accessory.FastDp("一测分摊", _p4ShadowPlayers[0], 32200, 4, isStack);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
     
+    [ScriptMethod(EventTypeEnum.ActionEffect, "1测2", ["ActionId:18591", "TargetIndex:1"])]
+    public void AlphaSacrament(Event @event, ScriptAccessory accessory)
+    {
+        // 18591->幻影十字圣礼 18569->十字圣礼 间隔18.1
+        var dp = accessory.FastDp("1测十字圣礼", @event.SourceId(), 18100, new Vector2(16, 100));
+        accessory.Method.SendDraw(0, DrawTypeEnum.Straight, dp);
+        dp.Rotation = float.Pi / 2;
+        accessory.Method.SendDraw(0, DrawTypeEnum.Straight, dp);
+        // (78.29|91.01|0.00) (108.99|78.29|0.00) (121.71|91.01|0.00)
+        var pos = @event.SourcePosition() - Center;
+        if (pos.Z > -15) return;
+        pos = Vector3.Normalize(pos.WithX(-pos.X)) * 18;
+        Vector3 wpos = pos + Center;
+        if(!GetIndex(accessory.Data.Me, out var myidx)) return;
+        switch (myidx)
+        {
+            case 0 or 5 or 6 or 7:
+                wpos = Vector3.Transform(pos, Matrix4x4.CreateRotationY(-float.Pi / 180 * 165)) + Center;
+                break;
+            case 2 or 3 or 4:
+                wpos = Vector3.Transform(pos, Matrix4x4.CreateRotationY(float.Pi / 180 * 165)) + Center;
+                break;
+            case 1:
+                break;
+        }
+        
+        dp = accessory.WaypointDp(wpos, 18100);
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(EventTypeEnum.ActionEffect, "1测动静", ["ActionId:regex:^(1921[34]|1858[56])$", "TargetIndex:1"])]
+    public void FateCalibrationAlphaOrdain(Event @event, ScriptAccessory accessory)
+    {
+        string str;
+        switch (@event.ActionId())
+        {
+            case 19213:
+                _p4OrdainList[0] = true;
+                break;
+            case 19214:
+                _p4OrdainList[0] = false;
+                break;
+            case 18585:
+                _p4OrdainList[1] = true;
+                str = $"一{(_p4OrdainList[0] ? "动" : "静")}，二{(_p4OrdainList[1] ? "动" : "静")}";
+                accessory.Method.TextInfo(str, 5000, true);
+                accessory.Method.SendChat("/e "+str);
+                break;
+            case 18586:
+                _p4OrdainList[1] = false;
+                str = $"一{(_p4OrdainList[0] ? "动" : "静")}，二{(_p4OrdainList[1] ? "动" : "静")}";
+                accessory.Method.TextInfo(str, 5000, true);
+                accessory.Method.SendChat("/e "+str);
+                break;
+        }
+    }
 
+    // Beta
 
+    [ScriptMethod(EventTypeEnum.StartCasting, "2测", ["ActionId:19220"])]
+    public void FateCalibrationBeta(Event @event, ScriptAccessory accessory)
+    {
+        if(!GetIndex(accessory.Data.Me, out var myidx)) return;
+        var isLight = myidx % 2 > 0;
+        // 0为大暗 1为大光 2小暗 3小光 4近线小暗 5近小光 6远线小暗 7远小光
+        // 怀疑分摊在3
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        
+        if (myidx > 1)
+        {
+            if (isLight)
+            {
+                dp = accessory.FastDp("2测小光", accessory.Data.Me, 40000, new Vector2(2, 20), true);
+                dp.TargetObject = _p4ShadowPlayers[1];
+                accessory.Method.SendDraw(0, DrawTypeEnum.Displacement, dp);
+                
+                dp = accessory.FastDp("2测大光", _p4ShadowPlayers[1], 40000, 22);
+                dp.InnerScale = new Vector2(21.8f);
+                dp.Radian = float.Pi * 2;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Donut, dp);
+            }
+            else
+            {
+                dp = accessory.FastDp("2测小暗", accessory.Data.Me, 40000, new Vector2(2, 20), true);
+                dp.TargetObject = _p4ShadowPlayers[0];
+                dp.Rotation = float.Pi;
+                accessory.Method.SendDraw(0, DrawTypeEnum.Displacement, dp);
+                
+                dp = accessory.FastDp("2测大暗", _p4ShadowPlayers[0], 40000, 5, true);
+                dp.InnerScale = new Vector2(4.8f);
+                dp.Radian = float.Pi * 2;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Donut, dp);
+            }
+        }
+        
+        var wpos = myidx switch
+        {
+            0 => new Vector3(119, 0, 100),
+            1 => new Vector3(93.84f, 0, 83.08f),
+            2 => new Vector3(116, 0, 100),
+            6 => new Vector3(116, 0, 101.7f),
+            _ => new Vector3(116, 0, 98.3f),
+        };
+        dp = accessory.WaypointDp(wpos, 40000);
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
 
+        dp = accessory.FastDp("连带神判", _p4ShadowPlayers[3], 7200, 4, true);
+        dp.Delay = 40000;
+        accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
+
+        switch (myidx)
+        {
+            case 0:
+                dp = accessory.WaypointDp(new Vector3(119, 0, 100), 8200);
+                dp.Delay = 40000;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                break;
+            case 2:
+                dp = accessory.WaypointDp(new Vector3(81, 0, 100), 8200);
+                dp.Delay = 40000;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                break;
+            case 6:
+                dp = accessory.WaypointDp(new Vector3(100, 0, 119), 8200);
+                dp.Delay = 40000;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                break;
+        }
+    }
+    
+    [ScriptMethod(EventTypeEnum.ActionEffect, "2测超级跳", ["ActionId:18589", "TargetIndex:1"])]
+    public void BetaJJump(Event @event, ScriptAccessory accessory)
+    {
+        // 18589->幻影正义之跃 18565->正义之跃 间隔33.027
+        var dp = accessory.FastDp("正义之跃", @event.SourceId(), 5000, 10);
+        dp.Delay = 28000;
+        dp.CentreResolvePattern = PositionResolvePatternEnum.PlayerFarestOrder;
+        dp.CentreOrderIndex = 1;
+        accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(EventTypeEnum.ActionEffect, "2测分散", ["ActionId:18592", "TargetIndex:1"])]
+    public void BetaSpread(Event @event, ScriptAccessory accessory)
+    {
+        // 18592->幻影制导动画技能分散 18861->制导动画技能 间隔33.613
+        var dp = accessory.FastDp("2测分散", 0, 6100, 6);
+        dp.Delay = 27500;
+        foreach (var aid in accessory.Data.PartyList)
+        {
+            dp.Owner = aid;
+            accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
+        }
+    }
+    
+    [ScriptMethod(EventTypeEnum.ActionEffect, "2测分摊", ["ActionId:18593", "TargetIndex:1"])]
+    public void BetaStack(Event @event, ScriptAccessory accessory)
+    {
+        // 18593->幻影制导动画技能分摊 18862->制导动画技能
+        if(!GetIndex(accessory.Data.Me, out var myidx)) return;
+        var isLight = myidx % 2 > 0;
+        
+        var dp = accessory.FastDp("2测分摊", _p4ShadowPlayers[0], 6100, 6, !isLight);
+        dp.Delay = 27500;
+        accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
+        
+        dp = accessory.FastDp("2测分摊", _p4ShadowPlayers[1], 6100, 6, isLight);
+        dp.Delay = 27500;
+        accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
+
+        if (myidx < 2) return;
+        if (isLight)
+        {
+            dp = accessory.WaypointDp(_p4ShadowPlayers[1], 6100);
+            dp.Delay = 27500;
+        }
+        else
+        {
+            dp = accessory.WaypointDp(_p4ShadowPlayers[0], 6100);
+            dp.Delay = 27500;
+        }
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(EventTypeEnum.ActionEffect, "2测月环", ["ActionId:18590", "TargetIndex:1"])]
+    public void BetaDonut(Event @event, ScriptAccessory accessory)
+    {
+        // 18590->幻影拜火圣礼 18566->拜火圣礼 月环
+        var dp = accessory.FastDp("2测月环", @event.SourceId(), 5000, 60);
+        dp.Delay = 28000;
+        dp.InnerScale = new Vector2(8);
+        dp.Radian = float.Pi * 2;
+        accessory.Method.SendDraw(0, DrawTypeEnum.Donut, dp);
+        
+        dp= accessory.WaypointDp(@event.SourceId(), 5000);
+        dp.Delay = 28000;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+    }
+
+    [ScriptMethod(EventTypeEnum.StartCasting, "加重诛罚", ["ActionId:18578"])]
+    public void OrdainedCapitalPunishment(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.FastDp("加重诛罚", @event.SourceId(), 8300, 4);
+        dp.CentreResolvePattern = PositionResolvePatternEnum.OwnerEnmityOrder;
+        dp.CentreOrderIndex = 1;
+        accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(EventTypeEnum.StartCasting, "诛罚", ["ActionId:18577"])]
+    public void OrdainedPunishment(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.FastDp("加重诛罚", @event.TargetId(), 5000, 5);
+        accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
+    }
+    
+    // AlmightyJudgment
+    
+    [ScriptMethod(EventTypeEnum.StartCasting, "株连", ["ActionId:18580"])]
+    public void IrresistibleGrace(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.FastDp("Irresistible Grace", @event.TargetId(), 5000, 6, true);
+        dp.InnerScale = new Vector2(5.8f);
+        dp.Radian = float.Pi * 2;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Donut, dp);
+    }
+
+    private static bool AlmostEqual(Vector3 v1, Vector3 v2)
+    {
+        if (Vector3.Distance(v1, v2) < 1)
+            return true;
+        return false;
+    }
+    
+    [ScriptMethod(EventTypeEnum.StartCasting, "地火清除", ["ActionId:18574"], false)]
+    public void AlmightyJudgmentClear(Event @event, ScriptAccessory accessory)
+    {
+        _p4AlmightyJudgments.Clear();
+    }
+    
     [ScriptMethod(EventTypeEnum.StartCasting, "地火", ["ActionId:18575"])]
     public void AlmightyJudgment(Event @event, ScriptAccessory accessory)
     {
@@ -493,17 +880,66 @@ public class TheEpicOfAlexander
         var dp = accessory.FastDp("Almighty Judgment", @event.EffectPosition(), 2000, 6);
         dp.Delay = 6000;
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
+
+        var pos = @event.EffectPosition();
+        foreach (var fire in fires)
+        {
+            if (AlmostEqual(pos, fire))
+                _p4AlmightyJudgments.Add(fire);
+            if (_p4AlmightyJudgments.Count == 2)
+            {
+                AlmightyJudgmentGuide(accessory);
+            }
+        }
     }
-        /*
-        pos:vec3(      107.988,    -0.015259,      99.9924 ) 右下
-        pos:vec3(      99.9924,    -0.015259,      107.988 ) 中下
-        pos:vec3(      91.9966,    -0.015259,      107.988 ) 左下
-        pos:vec3(      107.988,    -0.015259,      99.9924 ) 右中
-        */
+    
+    private static readonly List<Vector3> fires = [new (92,0,108), new(100,0,108), new(108,0,108)];
+    private static readonly Vector3 anotherfire = new(108, 0, 100);
+    
+    private void AlmightyJudgmentGuide(ScriptAccessory accessory)
+    {
+        Vector3 wpos1, wpos2;
+        if (AlmostEqual(_p4AlmightyJudgments[1], fires[1]))
+        {
+            if (AlmostEqual(_p4AlmightyJudgments[0], fires[0]))
+            {
+                wpos1 = fires[2];
+                wpos2 = anotherfire;
+            }
+            else
+            {
+                wpos1 = anotherfire;
+                wpos2 = fires[2];
+            }
+        }
+        else if(AlmostEqual(_p4AlmightyJudgments[0], fires[1]))
+        {
+            wpos1 = AlmostEqual(_p4AlmightyJudgments[1], fires[0]) ? fires[2] : fires[0];
+            wpos2 = fires[1];
+        }
+        else
+        {
+            wpos1 = fires[1];
+            wpos2 = _p4AlmightyJudgments[0];
+        }
+
+        var dp = accessory.WaypointDp(wpos1, 6000);
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+        
+        dp = accessory.WaypointDp(wpos2, 4000, 6000);
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+        
+        dp = accessory.FastDp("地火预指路", wpos1, 6000, 1);
+        dp.TargetPosition = wpos2;
+        dp.ScaleMode = ScaleMode.YByDistance;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+    }
 
     #endregion
-    
+
 }
+
+#region Helpers
 
 public static class EventExtensions
 {
@@ -626,37 +1062,63 @@ public static class EventExtensions
 
 public static class AccessoryExtensions
 {
-    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, uint owner, uint duration,
-        float radius)
+    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, uint owner, uint duration, float radius, bool safe = false)
     {
-        return FastDp(accessory, name, owner, duration, new Vector2(radius));
+        return FastDp(accessory, name, owner, duration, new Vector2(radius), safe);
     }
 
-    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, uint owner, uint duration,
-        Vector2 scale)
+    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, uint owner, uint duration, Vector2 scale, bool safe = false)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = name;
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = safe ? accessory.Data.DefaultSafeColor : accessory.Data.DefaultDangerColor;
         dp.Owner = owner;
         dp.DestoryAt = duration;
         dp.Scale = scale;
         return dp;
     }
 
-    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, Vector3 pos, uint duration, float radius)
+    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, Vector3 pos, uint duration, float radius, bool safe = false)
     {
-        return FastDp(accessory, name, pos, duration, new Vector2(radius));
+        return FastDp(accessory, name, pos, duration, new Vector2(radius), safe);
     }
 
-    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, Vector3 pos, uint duration, Vector2 scale)
+    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, Vector3 pos, uint duration, Vector2 scale, bool safe = false)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = name;
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = safe ? accessory.Data.DefaultSafeColor : accessory.Data.DefaultDangerColor;
         dp.Position = pos;
         dp.DestoryAt = duration;
         dp.Scale = scale;
+        return dp;
+    }
+
+    public static DrawPropertiesEdit WaypointDp(this ScriptAccessory accessory, uint target, uint duration, uint delay = 0, string name = "Waypoint")
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.Owner = accessory.Data.Me;
+        dp.TargetObject = target;
+        dp.DestoryAt = duration;
+        dp.Delay = delay;
+        dp.Scale = new Vector2(2);
+        dp.ScaleMode = ScaleMode.YByDistance;
+        return dp;
+    }
+    
+    public static DrawPropertiesEdit WaypointDp(this ScriptAccessory accessory, Vector3 pos, uint duration, uint delay = 0, string name = "Waypoint")
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.Owner = accessory.Data.Me;
+        dp.TargetPosition = pos;
+        dp.DestoryAt = duration;
+        dp.Delay = delay;
+        dp.Scale = new Vector2(2);
+        dp.ScaleMode = ScaleMode.YByDistance;
         return dp;
     }
 }
@@ -677,4 +1139,11 @@ public static class IbcHelper
     {
         return Svc.Objects.Where(x => x.DataId == dataId).FirstOrDefault();
     }
+    
+    public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
+    {
+        return Svc.Objects.Where(x => x.DataId == dataId);
+    }
 }
+
+#endregion
