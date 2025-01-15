@@ -2,9 +2,10 @@
   {
     "Name": "亚历山大绝境战.未完工",
     "Guid": "E047803D-38D5-45B4-AF48-71C0691CDCC9",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Cyf5119",
-    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/05-Shadowbringers/TheEpicOfAlexander.cs"
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/05-Shadowbringers/TheEpicOfAlexander.cs",
+    "UpdateInfo": "修了点P1的bug"
   },
   {
     "Name": "无敌提示宏",
@@ -41,6 +42,13 @@
     "Version": "0.0.0.1",
     "Author": "Cyf5119",
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/06-Endwalker/StormsCrown.cs"
+  },
+  {
+    "Name": "P1N-P4N捆绑包",
+    "Guid": "AD2A9D42-E040-442E-A8F2-86F7D13768BD",
+    "Version": "0.0.0.1",
+    "Author": "Cyf5119",
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/06-Endwalker/P1To4N.cs"
   },
   {
     "Name": "艳翼蛇鸟歼灭战",
