@@ -17,7 +17,8 @@ using KodakkuAssist.Module.Draw.Manager;
 
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
-[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战.未完工", territorys: [887], version: "0.0.0.2", author: "Cyf5119")]
+[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战.未完工", 
+    territorys: [887], version: "0.0.0.3", author: "Cyf5119", note: "半成品，缓慢制作中")]
 public class TheEpicOfAlexander
 {
     private static readonly Vector3 Center = new Vector3(100, 0, 100);
@@ -161,7 +162,7 @@ public class TheEpicOfAlexander
 
     // jagddoll tether 0011->player 0029->boss
     [ScriptMethod(EventTypeEnum.Tether, "狩猎人偶清除", ["Id:0029"], false)]
-    public void JagdDollClear(Event @event, ScriptAccessory accessory) => accessory.Method.RemoveDraw($"Jagd Doll {@event.SourceId()}");
+    public void JagdDollClear(Event @event, ScriptAccessory accessory) => accessory.Method.RemoveDraw($"JagdDoll {@event.SourceId()}");
 
     [ScriptMethod(EventTypeEnum.AddCombatant, "栓塞", ["DataId:11339"])]
     public void Embolus(Event @event, ScriptAccessory accessory)
