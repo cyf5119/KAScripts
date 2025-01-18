@@ -10,7 +10,7 @@ using KodakkuAssist.Module.Draw.Manager;
 
 namespace Cyf5119Script.ARealmReborn.TheNavel;
 
-[ScriptType(guid: "BC3B91DA-224A-4356-B7B3-75A8366A2C1C", name: "泰坦歼灭战", territorys: [1046, 293], version: "0.0.0.1", author: "Cyf5119")]
+[ScriptType(guid: "BC3B91DA-224A-4356-B7B3-75A8366A2C1C", name: "泰坦歼灭战", territorys: [1046, 293], version: "0.0.0.2", author: "Cyf5119")]
 // 假泰坦、真泰坦
 public class TheNavel
 {
@@ -22,6 +22,7 @@ public class TheNavel
     [ScriptMethod(name: "地裂", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(650|1364)$"])]
     public void Landslide(Event @event, ScriptAccessory accessory)
     {
+        var r = accessory.Data.Objects.SearchByEntityId(@event.SourceId())?.HitboxRadius?? 0;
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "地裂";
         dp.Color = accessory.Data.DefaultDangerColor;
@@ -29,7 +30,7 @@ public class TheNavel
         dp.Owner = @event.SourceId();
         // dp.Position = @event.EffectPosition();
         // dp.Rotation = @event.SourceRotation();
-        dp.Scale = new(6, 35);
+        dp.Scale = new(6, 35 + r);
         accessory.Method.SendDraw(0, DrawTypeEnum.Rect, dp);
     }
     
@@ -48,12 +49,13 @@ public class TheNavel
     [ScriptMethod(name: "爆炸", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:1052"])]
     public void Burst(Event @event, ScriptAccessory accessory)
     {
+        var r = accessory.Data.Objects.SearchByEntityId(@event.SourceId())?.HitboxRadius?? 0;
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "爆炸";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.DestoryAt = 5000;
         dp.Owner = @event.SourceId();
-        dp.Scale = new(5);
+        dp.Scale = new(5 + r);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
 }
