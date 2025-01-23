@@ -2,7 +2,7 @@
   {
     "Name": "亚历山大绝境战.未完工",
     "Guid": "E047803D-38D5-45B4-AF48-71C0691CDCC9",
-    "Version": "0.0.0.5",
+    "Version": "0.0.0.6",
     "Author": "Cyf5119",
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/05-Shadowbringers/TheEpicOfAlexander.cs",
     "UpdateInfo": "重写了P1死刑等部分机制，加入了P1.5指路"

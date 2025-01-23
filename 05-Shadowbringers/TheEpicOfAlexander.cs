@@ -19,7 +19,7 @@ using KodakkuAssist.Module.Draw.Manager;
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
 [ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战.未完工",
-    territorys: [887], version: "0.0.0.5", author: "Cyf5119", note: "半成品，缓慢制作中")]
+    territorys: [887], version: "0.0.0.6", author: "Cyf5119", note: "半成品，缓慢制作中")]
 public class TheEpicOfAlexander
 {
     // [UserSetting("P1小怪连线颜色")] 
@@ -107,6 +107,9 @@ public class TheEpicOfAlexander
     private List<Vector3> _p1RangePos = [];
     private Vector3 _p1Vector = new();
     private Dictionary<uint, uint> _p1Tether = [];
+    private Vector3 _p1HawkBlasterVector = new();
+    private readonly object _p1HawkBlasterLocker = new();
+    private uint _p1HawkBlasterTimes = 0;
 
     private void P1Reset()
     {
@@ -116,6 +119,8 @@ public class TheEpicOfAlexander
         _p1RangePos.Clear();
         _p1Vector = new Vector3();
         _p1Tether = [];
+        _p1HawkBlasterVector = new();
+        _p1HawkBlasterTimes = 0;
     }
 
     [ScriptMethod(EventTypeEnum.ActionEffect, "流体摆动0", ["ActionId:18808"])]
@@ -323,9 +328,7 @@ public class TheEpicOfAlexander
 
 
 
-    private Vector3 _p1HawkBlasterVector = new();
-    private readonly object _p1HawkBlasterLocker = new();
-    private uint _p1HawkBlasterTimes = 0;
+
     
     [ScriptMethod(EventTypeEnum.ActionEffect, "P1.5地火", ["ActionId:18480", "TargetIndex:1"])]
     public void HawkBlaster(Event @event, ScriptAccessory accessory)
@@ -339,15 +342,13 @@ public class TheEpicOfAlexander
 
             if (_p1HawkBlasterTimes == 1)
             {
-                bool isLeft = (@event.EffectPosition().V3YAngle(Center) + 22.5f) % 360 > 180;
+                var isLeft = (@event.EffectPosition().V3YAngle(Center) + 22.5f) % 360 > 180;
                 _p1HawkBlasterVector = isLeft? @event.EffectPosition(): @event.EffectPosition().V3YRotate(Center, 180);
                 HawkBlasterWaypoint(accessory);
             }
             
             if (_p1HawkBlasterTimes > 17)
-            {
                 _p1HawkBlasterTimes = 0;
-            }
         }
     }
 
@@ -1198,11 +1199,6 @@ public static class EventExtensions
     public static uint TargetIndex(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["TargetIndex"]);
-    }
-
-    public static uint SourceDataId(this Event @event)
-    {
-        return JsonConvert.DeserializeObject<uint>(@event["SourceDataId"]);
     }
 }
 
