@@ -19,10 +19,10 @@ using KodakkuAssist.Module.Draw.Manager;
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
 [ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战.未完工",
-    territorys: [887], version: "0.0.1.0", author: "Cyf5119", note: Note)]
+    territorys: [887], version: "0.0.1.1", author: "Cyf5119", note: Note)]
 public class TheEpicOfAlexander
 {
-    private const string Note = "半成品，缓慢制作中。\nP1 万变水波指路、P1.5指路已完成，请多多反馈错误的地方。";
+    private const string Note = "半成品，需要测试！！！\nP1万变水波指路、P1.5指路、P3时停指路、P3二运指路已完成，但仍需要更多的测试。";
     // [UserSetting("P1小怪连线颜色")] 
     // public ScriptColor P1AddsColor { get; set; } = new() { V4 = new(0.2f, 1, 1, 1) };
 
@@ -35,7 +35,6 @@ public class TheEpicOfAlexander
         P2Reset();
         P3Reset();
         P4Reset();
-
         accessory.Method.RemoveDraw(".*");
     }
 
@@ -64,7 +63,6 @@ public class TheEpicOfAlexander
         // accessory.Method.SendChat($"/e {@event.TargetName()}:{idx}");
         if (idx < 0 || idx > 7) return;
         _p0LimitCutList[idx] = @event.TargetId();
-        
     }
 
     [ScriptMethod(EventTypeEnum.PlayActionTimeline, "麻将执行", ["Id:7747", "SourceDataId:11342"])]
@@ -225,11 +223,11 @@ public class TheEpicOfAlexander
             if (new List<int>() { 2, 4, 5 }.Contains(myIdx)) return;
             var wpos = myIdx switch
             {
-                0 => new Vector3(-00.0f,0,-19.0f),
-                1 => new Vector3(-13.5f,0, 13.5f),
-                3 => new Vector3(-17.0f,0,-07.5f),
-                6 => new Vector3( 17.0f,0,-07.5f),
-                7 => new Vector3(-07.5f,0, 17.0f),
+                0 => new Vector3(-00.0f, 0, -19.0f),
+                1 => new Vector3(-13.5f, 0, +13.5f),
+                3 => new Vector3(-17.0f, 0, -07.5f),
+                6 => new Vector3(+17.0f, 0, -07.5f),
+                7 => new Vector3(-07.5f, 0, +17.0f),
                 _ => Vector3.Zero
             };
             wpos = wpos.V3YRotate(_p1Vector.V3YAngle()) + Center;
@@ -316,26 +314,26 @@ public class TheEpicOfAlexander
         {
             var wpos1 = myIdx switch
             {
-                0 => new Vector3( 02.0f,0,-02.0f),
-                1 => new Vector3( 00.0f,0, 02.8f),
-                2 => new Vector3(-08.0f,0, 12.0f),
-                3 => new Vector3(-12.0f,0, 08.0f),
-                4 => new Vector3(-02.8f,0, 00.0f),
-                5 => new Vector3( 02.8f,0, 00.0f),
-                6 => new Vector3( 12.0f,0, 08.0f),
-                7 => new Vector3( 08.0f,0, 12.0f),
+                0 => new Vector3(+02.0f, 0, -02.0f),
+                1 => new Vector3(+00.0f, 0, +02.8f),
+                2 => new Vector3(-08.0f, 0, +12.0f),
+                3 => new Vector3(-12.0f, 0, +08.0f),
+                4 => new Vector3(-02.8f, 0, +00.0f),
+                5 => new Vector3(+02.8f, 0, +00.0f),
+                6 => new Vector3(+12.0f, 0, +08.0f),
+                7 => new Vector3(+08.0f, 0, +12.0f),
                 _ => Center
             };
             var wpos2 = myIdx switch
             {
-                0 => new Vector3( 04.0f,0,-04.0f),
-                1 => new Vector3( 00.0f,0, 05.6f),
-                2 => new Vector3(-02.0f,0, 02.0f),
-                3 => new Vector3(-02.8f,0, 00.0f),
-                4 => new Vector3(-04.0f,0,-04.0f),
-                5 => new Vector3( 04.0f,0,-04.0f),
-                6 => new Vector3( 02.8f,0, 00.0f),
-                7 => new Vector3( 02.0f,0, 02.0f),
+                0 => new Vector3(+04.0f, 0, -04.0f),
+                1 => new Vector3(+00.0f, 0, +05.6f),
+                2 => new Vector3(-02.0f, 0, +02.0f),
+                3 => new Vector3(-02.8f, 0, +00.0f),
+                4 => new Vector3(-04.0f, 0, -04.0f),
+                5 => new Vector3(+04.0f, 0, -04.0f),
+                6 => new Vector3(+02.8f, 0, +00.0f),
+                7 => new Vector3(+02.0f, 0, +02.0f),
                 _ => Center
             };
             wpos1 = wpos1.V3YRotate(_p1Vector.V3YAngle()) + Center;
@@ -350,26 +348,26 @@ public class TheEpicOfAlexander
         {
             var wpos1 = myIdx switch
             {
-                0 => new Vector3( 02.0f,0,-02.0f),
-                1 => new Vector3( 00.0f,0, 02.8f),
-                2 => new Vector3(-08.0f,0,-12.0f),
-                3 => new Vector3(-12.0f,0,-08.0f),
-                4 => new Vector3(-02.8f,0, 00.0f),
-                5 => new Vector3( 02.8f,0, 00.0f),
-                6 => new Vector3( 12.0f,0, 08.0f),
-                7 => new Vector3( 08.0f,0, 12.0f),
+                0 => new Vector3(+02.0f, 0, -02.0f),
+                1 => new Vector3(+00.0f, 0, +02.8f),
+                2 => new Vector3(-08.0f, 0, -12.0f),
+                3 => new Vector3(-12.0f, 0, -08.0f),
+                4 => new Vector3(-02.8f, 0, +00.0f),
+                5 => new Vector3(+02.8f, 0, +00.0f),
+                6 => new Vector3(+12.0f, 0, +08.0f),
+                7 => new Vector3(+08.0f, 0, +12.0f),
                 _ => Center
             };
             var wpos2 = myIdx switch
             {
-                0 => new Vector3( 04.0f,0,-04.0f),
-                1 => new Vector3(-09.0f,0, 15.0f),
-                2 => new Vector3(-02.8f,0, 00.0f),
-                3 => new Vector3(-02.0f,0,-02.0f),
-                4 => new Vector3(-09.0f,0, 06.0f),
-                5 => new Vector3( 12.0f,0,-08.0f),
-                6 => new Vector3( 02.8f,0, 00.0f),
-                7 => new Vector3( 02.0f,0, 02.0f),
+                0 => new Vector3(+04.0f, 0, -04.0f),
+                1 => new Vector3(-09.0f, 0, +15.0f),
+                2 => new Vector3(-02.8f, 0, +00.0f),
+                3 => new Vector3(-02.0f, 0, -02.0f),
+                4 => new Vector3(-09.0f, 0, +06.0f),
+                5 => new Vector3(+12.0f, 0, -08.0f),
+                6 => new Vector3(+02.8f, 0, +00.0f),
+                7 => new Vector3(+02.0f, 0, +02.0f),
                 _ => Center
             };
             wpos1 = wpos1.V3YRotate(_p1Vector.V3YAngle()) + Center;
@@ -491,9 +489,9 @@ public class TheEpicOfAlexander
     private void HawkBlasterCalculate(Event @event, ScriptAccessory accessory, uint state)
     {
         var nextPos = @event.EffectPosition().V3YRotate(Center, -45);
-        if (state == 7 || state == 8)
+        if (state is 7 or 8)
             HawkBlasterDraw(accessory, nextPos, 4400);
-        if (state == 17 || state == 8)
+        if (state is 17 or 8)
             HawkBlasterDraw(accessory, Center, 2200);
         if (!new List<uint> { 7, 8, 9, 16, 17, 18 }.Contains(state))
             HawkBlasterDraw(accessory, nextPos, 2200);
@@ -671,15 +669,36 @@ public class TheEpicOfAlexander
     }
 
     [ScriptMethod(EventTypeEnum.StartCasting, "过场时停", ["ActionId:18522"])]
-    public async void TemporalStasis(Event @event, ScriptAccessory accessory)
+    public void TemporalStasis(Event @event, ScriptAccessory accessory)
     {
         // 开始咏唱到上buff有9.1s
-        await Task.Delay(6100);
         // 咏唱到第一刀是13s
-        AlphaSword(accessory, 6900, 0);
+        AlphaSword(accessory, 6900, 6100);
         // 咏唱到第一喷是13.3s
-        FlareThrower(accessory, 7200, 0, 2);
+        FlareThrower(accessory, 7200, 6100, 2);
         // 这里时间停止了，也不需要特别准
+
+        var myself = IbcHelper.GetByEntityId(accessory.Data.Me);
+        if (myself == null) return;
+        var myIdx = accessory.MyIndex();
+        var isTN = myIdx < 4;
+        var cruiseChaser = IbcHelper.GetFirstByDataId(11342);
+        if (cruiseChaser == null) return;
+        var ccVector = Vector3.Normalize(cruiseChaser.Position - Center);
+        
+        Vector3 wpos;
+        if (myself.HasStatus(1121)) // 判决确定：加重罪 电
+            wpos = ccVector.V3YRotate(180) * 18;
+        else if (myself.HasStatus(1123)) // 判决确定：强制接近命令 近
+            wpos = new Vector3(+6, 0, isTN ? -1.5f : +1.5f);
+        else if (myself.HasStatus(1124)) // 判决确定：禁止接近命令 远
+            wpos = new Vector3(isTN ? (ccVector.X < 0 ? -18 : -16) : (ccVector.X < 0 ? 16 : 18), 0, 0);
+        else // 闲人
+            wpos = new Vector3(-6, 0, isTN ? -1.5f : +1.5f);
+
+        wpos += Center;
+        var dp = accessory.WaypointDp(wpos, 9100);
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
 
     [ScriptMethod(EventTypeEnum.StartCasting, "神罚射线", ["ActionId:19072"])]
@@ -721,6 +740,91 @@ public class TheEpicOfAlexander
         // 19215 限制器减档
         P0LimitCutReset();
         _p0LimitCutEnabled = true;
+    }
+    
+    [ScriptMethod(EventTypeEnum.TargetIcon, "P3麻将指路1", ["Id:regex:^(00(4F|5[0123456]))$"])]
+    public void LimitCutP3Guide1(Event @event, ScriptAccessory accessory)
+    {
+        if (!Svc.Objects.Any(x => x is IBattleChara y && y.CastActionId == 18534)) return;
+        if (@event.TargetId() != accessory.Data.Me) return;
+        var myIdx = (int)@event.IconId() - 79;
+        if (myIdx < 0 || myIdx > 7) return;
+        var bruteJustice = IbcHelper.GetFirstByDataId(11340);
+        if (bruteJustice == null) return;
+        // 以A为北 方便计算
+        var bjRight = bruteJustice.Position.X - 100 > 0;
+
+        var dp = myIdx switch
+        {
+            0 => accessory.WaypointDp(new Vector3(bjRight ? +13 : -13, 0, -13) + Center, 9500),
+            1 => accessory.WaypointDp(new Vector3(bjRight ? -13 : +13, 0, -13) + Center, 9500),
+            2 => accessory.WaypointDp(new Vector3(bjRight ? +13 : -13, 0, +13) + Center, 9500),
+            3 => accessory.WaypointDp(new Vector3(bjRight ? -13 : +13, 0, +13) + Center, 9500),
+            4 => accessory.WaypointDp(new Vector3(bjRight ? +19 : -19, 0, +00) + Center, 3300),
+            5 => accessory.WaypointDp(new Vector3(bjRight ? -19 : +19, 0, +00) + Center, 3300),
+            6 => accessory.WaypointDp(new Vector3(bjRight ? +19 : -19, 0, +00) + Center, 9500),
+            7 => accessory.WaypointDp(new Vector3(bjRight ? -19 : +19, 0, +00) + Center, 9500),
+        };
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+        // 9.5 到飞机第一刀
+        // 忏悔区大小依次为 8 6 3？
+    }
+
+    [ScriptMethod(EventTypeEnum.ObjectChanged, "P3麻将指路2", ["DataId:2007519"])]
+    public void LimitCutP3Guide2(Event @event, ScriptAccessory accessory)
+    {
+        // 6.226 到飞机第一刀
+        if (!GetLimitCut(accessory.Data.Me, out var myIdx)) return;
+        var objRight = @event.SourcePosition().X - 100 > 0;
+        var bruteJustice = IbcHelper.GetFirstByDataId(11340);
+        if (bruteJustice == null) return;
+        // 以A为北 方便计算
+        var bjRight = bruteJustice.Position.X - 100 > 0;
+
+        if ((myIdx % 2 == 0) != (bjRight == objRight)) return;
+        // 玩家是否同侧 与 正义灵泉是否同侧  不同则停止
+        DrawPropertiesEdit dp1, dp2;
+        switch (myIdx)
+        {
+            case 0:
+                dp1 = accessory.WaypointDp(new Vector3(bjRight ? +19 : -19, 0, +00) + Center,8600, 6300);
+                dp2 = accessory.WaypointDp(@event.SourcePosition(),4200, 14900);
+                break;
+            case 1:
+                dp1 = accessory.WaypointDp(new Vector3(bjRight ? -19 : +19, 0, +00) + Center,8600, 6300);
+                dp2 = accessory.WaypointDp(@event.SourcePosition(),4200, 14900);
+                break;
+            case 2:
+                dp1 = accessory.WaypointDp(new Vector3(bjRight ? +19 : -19, 0, +00) + Center, 4200, 10700);
+                dp2 = dp1;
+                dp2.DestoryAt = 1;
+                break;
+            case 3:
+                dp1 = accessory.WaypointDp(new Vector3(bjRight ? -19 : +19, 0, +00) + Center, 4200, 10700);
+                dp2 = dp1;
+                dp2.DestoryAt = 1;
+                break;
+            case 4:
+                dp1 = accessory.WaypointDp(@event.SourcePosition(), 10700);
+                dp2 = accessory.WaypointDp(new Vector3(bjRight ? +13 : -13, 0, -13) + Center,4200, 10700);
+                break;
+            case 5:
+                dp1 = accessory.WaypointDp(@event.SourcePosition(), 10700);
+                dp2 = accessory.WaypointDp(new Vector3(bjRight ? -13 : +13, 0, -13) + Center,4200, 10700);
+                break;
+            case 6:
+                dp1 = accessory.WaypointDp(@event.SourcePosition(),4200, 10700);
+                dp2 = accessory.WaypointDp(new Vector3(bjRight ? +13 : -13, 0, +13) + Center,4200, 14900);
+                break;
+            case 7:
+                dp1 = accessory.WaypointDp(@event.SourcePosition(),4200, 10700);
+                dp2 = accessory.WaypointDp(new Vector3(bjRight ? -13 : +13, 0, +13) + Center,4200, 14900);
+                break;
+            default:
+                return;
+        }
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp1);
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp2);
     }
     
 
@@ -965,13 +1069,13 @@ public class TheEpicOfAlexander
     [ScriptMethod(EventTypeEnum.StartCasting, "2测", ["ActionId:19220"])]
     public void FateCalibrationBeta(Event @event, ScriptAccessory accessory)
     {
-        if (!GetIndex(accessory.Data.Me, out var myidx)) return;
-        var isLight = myidx % 2 > 0;
+        if (!GetIndex(accessory.Data.Me, out var myIdx)) return;
+        var isLight = myIdx % 2 > 0;
         // 0为大暗 1为大光 2小暗 3小光 4近线小暗 5近小光 6远线小暗 7远小光
         // 怀疑分摊在3
         var dp = accessory.Data.GetDefaultDrawProperties();
 
-        if (myidx > 1)
+        if (myIdx > 1)
         {
             if (isLight)
             {
@@ -998,13 +1102,13 @@ public class TheEpicOfAlexander
             }
         }
 
-        var wpos = myidx switch
+        var wpos = myIdx switch
         {
-            0 => new Vector3(119, 0, 100),
-            1 => new Vector3(93.84f, 0, 83.08f),
-            2 => new Vector3(116, 0, 100),
-            6 => new Vector3(116, 0, 101.7f),
-            _ => new Vector3(116, 0, 98.3f),
+            0 => new Vector3(119.0f, 0, 100.0f),
+            1 => new Vector3(093.8f, 0, 083.1f),
+            2 => new Vector3(116.0f, 0, 100.0f),
+            6 => new Vector3(116.0f, 0, 101.7f),
+            _ => new Vector3(116.0f, 0, 098.3f),
         };
         dp = accessory.WaypointDp(wpos, 40000);
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
@@ -1013,7 +1117,7 @@ public class TheEpicOfAlexander
         dp.Delay = 40000;
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
 
-        switch (myidx)
+        switch (myIdx)
         {
             case 0:
                 dp = accessory.WaypointDp(new Vector3(119, 0, 100), 8200);
@@ -1061,8 +1165,8 @@ public class TheEpicOfAlexander
     public void BetaStack(Event @event, ScriptAccessory accessory)
     {
         // 18593->幻影制导动画技能分摊 18862->制导动画技能
-        if (!GetIndex(accessory.Data.Me, out var myidx)) return;
-        var isLight = myidx % 2 > 0;
+        if (!GetIndex(accessory.Data.Me, out var myIdx)) return;
+        var isLight = myIdx % 2 > 0;
 
         var dp = accessory.FastDp("2测分摊", _p4ShadowPlayers[0], 6100, 6, !isLight);
         dp.Delay = 27500;
@@ -1072,7 +1176,7 @@ public class TheEpicOfAlexander
         dp.Delay = 27500;
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
 
-        if (myidx < 2) return;
+        if (myIdx < 2) return;
         if (isLight)
         {
             dp = accessory.WaypointDp(_p4ShadowPlayers[1], 6100);
@@ -1405,24 +1509,29 @@ public static class AccessoryExtensions
 
 public static class IbcHelper
 {
-    public static IBattleChara? GetById(uint id)
-    {
-        return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
-    }
-
     public static IBattleChara? GetMe()
     {
         return Svc.ClientState.LocalPlayer;
     }
-
+    
+    public static IBattleChara? GetByEntityId(uint id)
+    {
+        return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
+    }
+    
     public static IGameObject? GetFirstByDataId(uint dataId)
     {
-        return Svc.Objects.Where(x => x.DataId == dataId).FirstOrDefault();
+        return Svc.Objects.FirstOrDefault(x => x.DataId == dataId);
     }
 
     public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
     {
         return Svc.Objects.Where(x => x.DataId == dataId);
+    }
+
+    public static bool HasStatus(this IBattleChara chara, uint statusId)
+    {
+        return chara.StatusList.Any(x => x.StatusId == statusId);
     }
 }
 
