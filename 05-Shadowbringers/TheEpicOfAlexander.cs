@@ -19,7 +19,7 @@ using KodakkuAssist.Module.Draw.Manager;
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
 [ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战.未完工",
-    territorys: [887], version: "0.0.1.2", author: "Cyf5119", note: Note)]
+    territorys: [887], version: "0.0.1.3", author: "Cyf5119", note: Note)]
 public class TheEpicOfAlexander
 {
     private const string Note = "半成品，需要测试！！！\nP1万变水波指路、P1.5指路、P3时停指路、P3二运指路已完成，但仍需要更多的测试。";
@@ -463,13 +463,13 @@ public class TheEpicOfAlexander
         float rot = myIdx switch
         {
             0 => 270,
-            1 => 270 - 22.5f,
+            1 => 270 + 22.5f,
             2 => 225,
-            3 => 225 - 22.5f,
+            3 => 225 + 22.5f,
             4 => 135,
-            5 => 135 - 22.5f,
+            5 => 135 + 22.5f,
             6 => 45,
-            7 => 45 - 22.5f,
+            7 => 45 + 22.5f,
             _ => 0
         };
         uint dura = (int)(myIdx/2) switch
