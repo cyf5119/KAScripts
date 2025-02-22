@@ -19,7 +19,7 @@ using KodakkuAssist.Module.Draw.Manager;
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
 [ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战.未完工",
-    territorys: [887], version: "0.0.1.3", author: "Cyf5119", note: Note)]
+    territorys: [887], version: "0.0.1.4", author: "Cyf5119", note: Note)]
 public class TheEpicOfAlexander
 {
     private const string Note = "半成品，需要测试！！！\nP1万变水波指路、P1.5指路、P3时停指路、P3二运指路已完成，但仍需要更多的测试。";
@@ -692,7 +692,7 @@ public class TheEpicOfAlexander
         else if (myself.HasStatus(1123)) // 判决确定：强制接近命令 近
             wpos = new Vector3(+6, 0, isTN ? -1.5f : +1.5f);
         else if (myself.HasStatus(1124)) // 判决确定：禁止接近命令 远
-            wpos = new Vector3(isTN ? (ccVector.X < 0 ? -18 : -16) : (ccVector.X < 0 ? 16 : 18), 0, 0);
+            wpos = new Vector3(isTN ? (ccVector.X < 0 ? -16 : -18) : (ccVector.X < 0 ? 18 : 16), 0, 0);
         else // 闲人
             wpos = new Vector3(-6, 0, isTN ? -1.5f : +1.5f);
 
