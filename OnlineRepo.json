@@ -4,6 +4,7 @@
     "Guid": "E047803D-38D5-45B4-AF48-71C0691CDCC9",
     "Version": "0.0.1.4",
     "Author": "Cyf5119",
+    "TerritoryIds": [887],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/05-Shadowbringers/TheEpicOfAlexander.cs",
     "UpdateInfo": "半成品，需要测试！！！\nP1万变水波指路、P1.5指路、P3时停指路、P3二运指路已完成，但仍需要更多的测试。"
   },
@@ -19,6 +20,7 @@
     "Guid": "BC3B91DA-224A-4356-B7B3-75A8366A2C1C",
     "Version": "0.0.0.2",
     "Author": "Cyf5119",
+    "TerritoryIds": [1046, 293],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/02-ARealmReborn/TheNavel.cs"
   },
   {
@@ -26,6 +28,7 @@
     "Guid": "9248BFE3-D4AE-46AA-9111-AEC2DACDE893",
     "Version": "0.0.0.2",
     "Author": "Cyf5119",
+    "TerritoryIds": [799],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/04-Stormblood/O10n.cs",
     "UpdateInfo": "修改休眠逻辑。"
   },
@@ -34,6 +37,7 @@
     "Guid": "2BEBDA4A-DA6A-4B54-B9B8-533F34B3A2EB",
     "Version": "0.0.0.1",
     "Author": "Cyf5119",
+    "TerritoryIds": [997],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/06-Endwalker/TheFinalDay.cs"
   },
   {
@@ -41,6 +45,7 @@
     "Guid": "776A7DFB-F8C3-4ECC-BFB7-3631D083A117",
     "Version": "0.0.0.1",
     "Author": "Cyf5119",
+    "TerritoryIds": [1071],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/06-Endwalker/StormsCrown.cs"
   },
   {
@@ -48,6 +53,7 @@
     "Guid": "AD2A9D42-E040-442E-A8F2-86F7D13768BD",
     "Version": "0.0.0.1",
     "Author": "Cyf5119",
+    "TerritoryIds": [1002, 1004, 1006, 1008],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/06-Endwalker/P1To4N.cs"
   },
   {
@@ -55,6 +61,7 @@
     "Guid": "E9ABB865-498F-4C4F-8071-8A2E9F0589F6",
     "Version": "0.0.0.1",
     "Author": "Cyf5119",
+    "TerritoryIds": [1195],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/WorqorLarDor.cs"
   },
   {
@@ -62,6 +69,7 @@
     "Guid": "243443E4-FC8E-3EA6-9A75-FD2A4B6990FF",
     "Version": "0.0.0.3",
     "Author": "Cyf5119",
+    "TerritoryIds": [1199],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/Alexandria.cs",
     "UpdateInfo": "修改休眠逻辑。"
   },
@@ -70,6 +78,7 @@
     "Guid": "C6AAF3DF-64BA-15C2-41F8-D24F7F4656DD",
     "Version": "0.0.0.3",
     "Author": "Cyf5119",
+    "TerritoryIds": [1203],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/TenderValley.cs"
   },
   {
@@ -77,6 +86,7 @@
     "Guid": "32BC9D47-D623-507F-CDBF-E17EFEA73FA4",
     "Version": "0.0.0.6",
     "Author": "Cyf5119",
+    "TerritoryIds": [1204],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/TheStrayboroughDeadwalk.cs",
     "UpdateInfo": "修改休眠逻辑。"
   },
@@ -85,6 +95,7 @@
     "Guid": "28EEE8DC-DA6A-3F91-0D0C-7AA1BFB49AB0",
     "Version": "0.0.0.2",
     "Author": "Cyf5119",
+    "TerritoryIds": [1225],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M1n.cs",
     "UpdateInfo": "修改休眠逻辑。"
   },
@@ -93,6 +104,7 @@
     "Guid": "4FD21978-B76C-4BF7-A3F5-D0490BB51915",
     "Version": "0.0.0.1",
     "Author": "Cyf5119",
+    "TerritoryIds": [1227],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M2n.cs"
   },
   {
@@ -100,6 +112,7 @@
     "Guid": "AA6A8D8A-4462-41A2-B500-90515DE6534A",
     "Version": "0.0.0.1",
     "Author": "Cyf5119",
+    "TerritoryIds": [1229],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M3n.cs"
   },
   {
@@ -107,6 +120,7 @@
     "Guid": "F4A95B34-AE13-40E4-9106-78D607BCFD57",
     "Version": "0.0.0.1",
     "Author": "Cyf5119",
+    "TerritoryIds": [1231],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M4n.cs",
     "UpdateInfo": "优化了多重分身释放半场刀时的绘制。"
   },
@@ -116,6 +130,7 @@
     "Guid": "2F27EFB2-CE87-4E6A-9D83-60FE4CC26141",
     "Version": "0.0.0.3",
     "Author": "Cyf5119",
+    "TerritoryIds": [1179, 1180],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/06-Endwalker/AalBomb.cs",
     "UpdateInfo": "修改休眠逻辑。"
   }
