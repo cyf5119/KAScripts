@@ -19,7 +19,7 @@ using KodakkuAssist.Module.Draw.Manager;
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
 [ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战.未完工",
-    territorys: [887], version: "0.0.1.4", author: "Cyf5119", note: Note)]
+    territorys: [887], version: "0.0.1.5", author: "Cyf5119", note: Note)]
 public class TheEpicOfAlexander
 {
     private const string Note = "半成品，需要测试！！！\nP1万变水波指路、P1.5指路、P3时停指路、P3二运指路已完成，但仍需要更多的测试。";
@@ -770,7 +770,7 @@ public class TheEpicOfAlexander
         // 忏悔区大小依次为 8 6 3？
     }
 
-    [ScriptMethod(EventTypeEnum.ObjectChanged, "P3麻将指路2", ["DataId:2007519"])]
+    [ScriptMethod(EventTypeEnum.ObjectChanged, "P3麻将指路2", ["DataId:2007519", "Operate:Add"])]
     public void LimitCutP3Guide2(Event @event, ScriptAccessory accessory)
     {
         // 6.226 到飞机第一刀
