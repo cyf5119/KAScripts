@@ -1,9 +1,12 @@
-﻿using System;
+﻿#define DEBUG
+
+using System;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
@@ -15,19 +18,29 @@ using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Module.Draw.Manager;
+using KodakkuAssist.Module.GameOperate;
 
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
 [ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战.未完工",
-    territorys: [887], version: "0.0.1.5", author: "Cyf5119", note: Note)]
+    territorys: [887], version: "0.0.2.0", author: "Cyf5119", note: Note)]
 public class TheEpicOfAlexander
 {
-    private const string Note = "半成品，需要测试！！！\nP1万变水波指路、P1.5指路、P3时停指路、P3二运指路已完成，但仍需要更多的测试。";
-    // [UserSetting("P1小怪连线颜色")] 
-    // public ScriptColor P1AddsColor { get; set; } = new() { V4 = new(0.2f, 1, 1, 1) };
+    private const string Note = "有问题来DC反馈。\n我也忘了我更新了什么了。\n/e KASCLEAR 清理残余画图";
 
-    private static readonly Vector3 Center = new(100, 0, 100);
+    #region 用户设置
+
+    [UserSetting("P2仅显示自己的传毒提示")] public static bool P2RotsSelfOnly { get; set; } = false;
     
+    [UserSetting("P2蓝毒颜色")] public static ScriptColor P2Blue { get; set; } = new() { V4 = new Vector4(102 / 255f, 136 / 255f, 187 / 255f, 1) };
+    [UserSetting("P2橙毒颜色")] public static ScriptColor P2Orange { get; set; } = new() { V4 = new Vector4(204 / 255f, 136 / 255f, 102 / 255f, 1) };
+    [UserSetting("P2紫毒颜色")] public static ScriptColor P2Purple { get; set; } = new() { V4 = new Vector4(85 / 255f, 34 / 255f, 153 / 255f, 1) };
+    [UserSetting("P2绿毒颜色")] public static ScriptColor P2Green { get; set; } = new() { V4 = new Vector4(51 / 255f, 85 / 255f, 17 / 255f, 1) };
+
+    #endregion
+    
+    private static readonly Vector3 Center = new(100, 0, 100);
+
     public void Init(ScriptAccessory accessory)
     {
         P0Reset();
@@ -40,22 +53,85 @@ public class TheEpicOfAlexander
 
     #region P0
 
+    private uint _phase = 0;
+    
     private uint[] _p0LimitCutList = [0, 0, 0, 0, 0, 0, 0, 0];
     private bool _p0LimitCutEnabled = false;
     private uint _p0LimitCutTimes = 0;
-    
+
     private void P0Reset()
     {
+        _phase = 0;
         P0LimitCutReset();
     }
 
+    [ScriptMethod(EventTypeEnum.Chat, "clear draw", ["Type:Echo", "Message:KASCLEAR"], false)]
+    public void clear_draw(Event @event, ScriptAccessory sa) => sa.Method.RemoveDraw(".*");
+    
+    # region 阶段控制
+    
+    [ScriptMethod(name: "阶段控制P1-流体摆动", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:18864", "TargetIndex:1"], userControl: false)]
+    public void PhaseControl1(Event @event, ScriptAccessory accessory) => _phase = _phase == 0 ? 100 : _phase;
+    
+    [ScriptMethod(name: "阶段控制P1-倾泻", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18470"], userControl: false)]
+    public void PhaseControl1_1(Event @event, ScriptAccessory accessory) => _phase += 1;
+    
+    [ScriptMethod(name: "阶段控制P1.5-麻将点名", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^(00(4F|5[0123456]))$"], userControl: false)]
+    public void PhaseControl1_5(Event @event, ScriptAccessory accessory) => _phase = _phase < 200 ? 150 : _phase;
+    
+    [ScriptMethod(name: "阶段控制P2-正义飞踢", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:18516", "TargetIndex:1"], userControl: false)]
+    public void PhaseControl2(Event @event, ScriptAccessory accessory) => _phase = 200;
+    
+    [ScriptMethod(name: "阶段控制P2-制导", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18479"], userControl: false)]
+    public void PhaseControl2_1(Event @event, ScriptAccessory accessory) => _phase = 210;
+    
+    [ScriptMethod(name: "阶段控制P2-大地导弹", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18510"], userControl: false)]
+    public void PhaseControl2_2(Event @event, ScriptAccessory accessory) => _phase = 220;
+    
+    [ScriptMethod(name: "阶段控制P2-大火炎放射", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18501"], userControl: false)]
+    public void PhaseControl2_3(Event @event, ScriptAccessory accessory) => _phase = 230;
+    
+    [ScriptMethod(name: "阶段控制P2-终审闭庭", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:18864", "TargetIndex:1"], userControl: false)]
+    public void PhaseControl2_4(Event @event, ScriptAccessory accessory) => _phase = 340;
+    
+    [ScriptMethod(name: "阶段控制P3-时间停止", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18470"], userControl: false)]
+    public void PhaseControl3(Event @event, ScriptAccessory accessory) => _phase = 300;
+    
+    [ScriptMethod(name: "阶段控制P3-时空潜行阵列", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18543"], userControl: false)]
+    public void PhaseControl3_1(Event @event, ScriptAccessory accessory) => _phase = 310;
+    
+    [ScriptMethod(name: "阶段控制P3-次元断绝阵列", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18542"], userControl: false)]
+    public void PhaseControl3_2(Event @event, ScriptAccessory accessory) => _phase = 320;
+    
+    [ScriptMethod(name: "阶段控制P3-召唤亚历山大", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:19029"], userControl: false)]
+    public void PhaseControl3_3(Event @event, ScriptAccessory accessory) => _phase = 330;
+    
+    [ScriptMethod(name: "阶段控制P4-终审判决", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18557"], userControl: false)]
+    public void PhaseControl4(Event @event, ScriptAccessory accessory) => _phase = 400;
+    
+    [ScriptMethod(name: "阶段控制P4-未来观测α", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18555"], userControl: false)]
+    public void PhaseControl4_1(Event @event, ScriptAccessory accessory) => _phase = 410;
+    
+    [ScriptMethod(name: "阶段控制P4-未来观测β", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:19219"], userControl: false)]
+    public void PhaseControl4_2(Event @event, ScriptAccessory accessory) => _phase = 420;
+    
+    [ScriptMethod(name: "阶段控制P4-神圣大审判", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18574"], userControl: false)]
+    public void PhaseControl4_3(Event @event, ScriptAccessory accessory) => _phase = 430;
+    
+    [ScriptMethod(name: "阶段控制P4-时空干涉", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18582"], userControl: false)]
+    public void PhaseControl4_4(Event @event, ScriptAccessory accessory) => _phase = 440;
+    
+    #endregion
+
+    #region 麻将控制
+    
     private void P0LimitCutReset()
     {
         _p0LimitCutList = [0, 0, 0, 0, 0, 0, 0, 0];
         _p0LimitCutEnabled = false;
         _p0LimitCutTimes = 0;
     }
-    
+
     [ScriptMethod(EventTypeEnum.TargetIcon, "麻将记录", ["Id:regex:^(00(4F|5[0123456]))$"], false)]
     public void LimitCutRecord(Event @event, ScriptAccessory accessory)
     {
@@ -69,19 +145,19 @@ public class TheEpicOfAlexander
     public void LimitCutPlay(Event @event, ScriptAccessory accessory)
     {
         if (!_p0LimitCutEnabled) return;
-        
+
         var dp = accessory.FastDp("阿尔法之剑", @event.SourceId(), 1100, 25 + 5);
         dp.TargetObject = _p0LimitCutList[_p0LimitCutTimes * 2];
         dp.Radian = float.Pi / 2;
         accessory.Method.SendDraw(0, DrawTypeEnum.Fan, dp);
-        
+
         dp = accessory.FastDp("超级摧毁者冲击", @event.SourceId(), 2600, new Vector2(10, 50 + 5));
         dp.TargetObject = _p0LimitCutList[_p0LimitCutTimes * 2 + 1];
         accessory.Method.SendDraw(0, DrawTypeEnum.Rect, dp);
 
         _p0LimitCutTimes++;
     }
-    
+
     private bool GetLimitCut(uint id, out int index)
     {
         if (!_p0LimitCutList.Contains(id))
@@ -93,6 +169,10 @@ public class TheEpicOfAlexander
         index = _p0LimitCutList.IndexOf(id);
         return true;
     }
+    
+    #endregion
+
+    #region 超级跳与回头扫
 
     // 18505->读条超级跳越 18506->实际伤害超级跳越
     [ScriptMethod(EventTypeEnum.StartCasting, "超级跳跃", ["ActionId:18505"])]
@@ -113,6 +193,8 @@ public class TheEpicOfAlexander
         dp.Radian = float.Pi / 2;
         accessory.Method.SendDraw(0, DrawTypeEnum.Fan, dp);
     }
+
+    #endregion
     
     #endregion
 
@@ -139,6 +221,8 @@ public class TheEpicOfAlexander
         _p1HawkBlasterVector = new Vector3();
         _p1HawkBlasterTimes = 0;
     }
+
+    #region 流体摆动与强袭
 
     [ScriptMethod(EventTypeEnum.ActionEffect, "流体摆动0", ["ActionId:18808"])]
     public void FluidSwing0(Event @event, ScriptAccessory accessory)
@@ -195,6 +279,8 @@ public class TheEpicOfAlexander
         accessory.Method.SendDraw(0, DrawTypeEnum.Fan, dp);
     }
 
+    #endregion
+    
     [ScriptMethod(EventTypeEnum.StartCasting, "倾泻计数", ["ActionId:18470"], false)]
     public void Cascade(Event @event, ScriptAccessory accessory)
     {
@@ -217,7 +303,7 @@ public class TheEpicOfAlexander
             foreach (var pos in _p1RangePos)
                 _p1Vector += pos;
             _p1Vector = Vector3.Normalize(_p1Vector);
-            
+
             var myIdx = accessory.MyIndex();
             if (_p1CascadeTimes != 1) return;
             if (new List<int>() { 2, 4, 5 }.Contains(myIdx)) return;
@@ -235,6 +321,8 @@ public class TheEpicOfAlexander
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
         }
     }
+
+    #region 狩猎人偶
 
     [ScriptMethod(EventTypeEnum.AddCombatant, "狩猎人偶", ["DataId:11338"])]
     public void JagdDoll(Event @event, ScriptAccessory accessory)
@@ -261,6 +349,7 @@ public class TheEpicOfAlexander
             dp.Color = dp.Color.WithW(5);
             accessory.Method.SendDraw(0, DrawTypeEnum.Line, dp);
         }
+
         // 18462 castType=5 r=8+0.8
         // 6.024  16.693  27.289
         dp = accessory.FastDp($"狩猎人偶-{@event.SourceId()}", @event.SourceId(), 4000, 8.8f, isMyDoll);
@@ -276,6 +365,10 @@ public class TheEpicOfAlexander
     [ScriptMethod(EventTypeEnum.Tether, "狩猎人偶清除", ["Id:0029"], false)]
     public void JagdDollClear(Event @event, ScriptAccessory accessory) =>
         accessory.Method.RemoveDraw($"狩猎人偶-{@event.SourceId()}");
+
+    #endregion
+
+    #region 万变水波
     
     private void ProteanWaves(ScriptAccessory accessory, uint sid, uint delay, uint times)
     {
@@ -338,7 +431,7 @@ public class TheEpicOfAlexander
             };
             wpos1 = wpos1.V3YRotate(_p1Vector.V3YAngle()) + Center;
             wpos2 = wpos2.V3YRotate(_p1Vector.V3YAngle()) + Center;
-            
+
             dp = accessory.WaypointDp(wpos1, 5100);
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
             dp = accessory.WaypointDp(wpos2, 3100, 5100);
@@ -372,14 +465,15 @@ public class TheEpicOfAlexander
             };
             wpos1 = wpos1.V3YRotate(_p1Vector.V3YAngle()) + Center;
             wpos2 = wpos2.V3YRotate(_p1Vector.V3YAngle()) + Center;
-            
+
             dp = accessory.WaypointDp(wpos1, 5100);
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
             dp = accessory.WaypointDp(wpos2, 6100, 5100);
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
         }
     }
-
+    
+    #endregion
 
     [ScriptMethod(EventTypeEnum.AddCombatant, "栓塞", ["DataId:11339"])]
     public void Embolus(Event @event, ScriptAccessory accessory)
@@ -387,8 +481,8 @@ public class TheEpicOfAlexander
         var dp = accessory.FastDp($"栓塞-{@event.SourceId()}", @event.SourceId(), 30000, 1);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
-    
-    [ScriptMethod(EventTypeEnum.RemoveCombatant, "栓塞清除",["DataId:11339"], false)]
+
+    [ScriptMethod(EventTypeEnum.RemoveCombatant, "栓塞清除", ["DataId:11339"], false)]
     public void EmbolusClear(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"栓塞-{@event.SourceId()}");
@@ -424,6 +518,8 @@ public class TheEpicOfAlexander
             accessory.Method.RemoveDraw($"Drainage {item.Key} {item.Value}");
         }
     }
+
+    #region 鹰式破坏炮
     
     [ScriptMethod(EventTypeEnum.ActionEffect, "P1.5地火", ["ActionId:18480", "TargetIndex:1"])]
     public void HawkBlaster(Event @event, ScriptAccessory accessory)
@@ -437,14 +533,14 @@ public class TheEpicOfAlexander
 
             if (_p1HawkBlasterTimes == 1)
             {
-
                 var isLeft = (@event.EffectPosition().V3YAngle(Center) + 22.5f) % 360 > 180;
 
-                _p1HawkBlasterVector = isLeft ? @event.EffectPosition() : @event.EffectPosition().V3YRotate(Center, 180);
+                _p1HawkBlasterVector =
+                    isLeft ? @event.EffectPosition() : @event.EffectPosition().V3YRotate(Center, 180);
 
                 HawkBlasterWaypoint(accessory);
             }
-            
+
             if (_p1HawkBlasterTimes > 17)
                 _p1HawkBlasterTimes = 0;
         }
@@ -455,7 +551,7 @@ public class TheEpicOfAlexander
         var wpos = _p1HawkBlasterVector;
         if (!GetLimitCut(accessory.Data.Me, out var myIdx)) return;
         wpos = ((myIdx % 4) < 2) ? wpos : wpos.V3YRotate(Center, 180);
-        
+
         var dp = accessory.WaypointDp(wpos, 2200);
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
 
@@ -472,12 +568,12 @@ public class TheEpicOfAlexander
             7 => 45 + 22.5f,
             _ => 0
         };
-        uint dura = (int)(myIdx/2) switch
+        uint dura = (int)(myIdx / 2) switch
         {
-            0 => 7500, // 7.45
+            0 => 7500,  // 7.45
             1 => 12100, // 12.083
             2 => 16700, // 16.726
-            3 => 21400,  // 21.36
+            3 => 21400, // 21.36
             _ => 999999
         };
         wpos = wpos.V3YRotate(Center, rot);
@@ -485,7 +581,7 @@ public class TheEpicOfAlexander
         dp = accessory.WaypointDp(wpos, 5000, dura - 5000);
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
-    
+
     private void HawkBlasterCalculate(Event @event, ScriptAccessory accessory, uint state)
     {
         var nextPos = @event.EffectPosition().V3YRotate(Center, -45);
@@ -502,29 +598,109 @@ public class TheEpicOfAlexander
         var dp = accessory.FastDp("鹰式破坏炮", pos, dura, 10);
         dp.Color = accessory.Data.DefaultDangerColor.WithW(0.05f);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
-        
+
         dp.Color = accessory.Data.DefaultDangerColor.WithW(2);
         dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
     
     #endregion
+    
+    #endregion
 
     #region P2
+    
 
     private void P2Reset()
     {
-        
     }
+
+    #region 传毒相关
+
+    // 蓝α 橙β 紫γ 绿δ
+    private static uint[] _decreeNisis = [2222, 2223, 2137, 2138];
+    private static uint[] _judgmentNisis = [2224, 2225, 2139, 2140];
+    private static ScriptColor[] _nisiColors = [P2Blue, P2Orange, P2Purple, P2Green];
+    
+    [ScriptMethod(name: "上毒", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^(222[23]|213[78])$"])]
+    public void FinalDecreeNisi(Event evt, ScriptAccessory sa)
+    {
+        sa.Method.RemoveDraw($"P2-毒-{evt.StatusId()}");
+    }
+
+    private void P2PassRot(ScriptAccessory sa, uint state)
+    {
+        foreach (var player in sa.GetParty())
+        {
+            var nisi = _decreeNisis.FirstOrDefault(x => player.HasStatus(x));
+            if (nisi is 0)
+                continue;
+            
+            var sid = player.EntityId;
+            var idx = sa.Data.PartyList.IndexOf(sid);
+            var tid = sa.Data.PartyList[idx > 3 ? idx - 4 : idx + 4];
+            
+            var dp = sa.FastDp($"P2-毒-{nisi}", sid, 10000, 5);
+            dp.Color = _nisiColors[_decreeNisis.IndexOf(nisi)].V4.WithW(5);
+            dp.ScaleMode = ScaleMode.YByDistance;
+            
+            if (state == 1)
+            {
+                if (idx % 4 == 1)
+                    dp.Delay = 10000;
+            }
+            else if (state == 2)
+            {
+                if (idx % 4 > 1)
+                {
+                    List<int> lst = idx < 4 ? [6, 7] : [2, 3];
+                    var tplayer = sa.GetParty()
+                        .Where(x => lst.Contains(sa.Data.PartyList.IndexOf(x.EntityId)))
+                        .OrderBy(x => Vector3.Distance(player.Position, x.Position)).FirstOrDefault();
+                    if (tplayer is null)
+                        continue;
+                    tid = tplayer.EntityId;
+                }
+            }
+            else if (state == 3)
+            {
+                List<int> lst = idx < 4 ? [4, 5, 6, 7] : [0, 1, 2, 3];
+                var tplayer = sa.GetParty()
+                    .FirstOrDefault(x => lst.Contains(sa.Data.PartyList.IndexOf(x.EntityId)) 
+                                         && x.HasStatus(_judgmentNisis[_decreeNisis.IndexOf(nisi)]));
+                if (tplayer is null)
+                    continue;
+                tid = tplayer.EntityId;
+                dp.Delay = 5000;
+            }
+            
+            if (P2RotsSelfOnly && sa.Data.Me != sid && sa.Data.Me != tid)
+                continue;
+            dp.TargetObject = tid;
+
+            sa.Method.SendDraw(0, DrawTypeEnum.Line, dp);
+        }
+    }
+
+    [ScriptMethod(name: "一传提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18486"])]
+    public void P2PassRot1(Event evt, ScriptAccessory sa) => P2PassRot(sa, 1);
+
+    [ScriptMethod(name: "二传提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:18511", "TargetIndex:1"])]
+    public void P2PassRot2(Event evt, ScriptAccessory sa) => P2PassRot(sa, 2);
+
+    [ScriptMethod(name: "三传提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:18502", "TargetIndex:1"])]
+    public void P2PassRot3(Event evt, ScriptAccessory sa) => P2PassRot(sa, 3);
+    
+    #endregion
     
     
+
     [ScriptMethod(EventTypeEnum.StartCasting, "激光战轮", ["ActionId:18517"])]
     public void EyeOfTheChakram(Event @event, ScriptAccessory accessory)
     {
         // 加上目标圈
         var dp = accessory.FastDp("Eye of the Chakram", @event.SourceId(), 6000, new Vector2(6, 70 + 3));
         accessory.Method.SendDraw(0, DrawTypeEnum.Rect, dp);
-        
     }
 
     [ScriptMethod(EventTypeEnum.StartCasting, "鹰式破坏炮", ["ActionId:18481"])]
@@ -569,9 +745,28 @@ public class TheEpicOfAlexander
         accessory.Method.RemoveDraw("water");
         accessory.Method.RemoveDraw("lightning");
     }
-    
+
+    [ScriptMethod(EventTypeEnum.TargetIcon, "冰圈1", ["Id:0043"])]
+    public void IceMissile1(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.FastDp("冰圈1", @event.TargetId(), 5100, 9);
+        dp.InnerScale = new Vector2(6);
+        dp.Radian = float.Pi * 2;
+        accessory.Method.SendDraw(0, DrawTypeEnum.Donut, dp);
+    }
+
+    [ScriptMethod(EventTypeEnum.ObjectChanged, "冰圈2", ["DataId:2004365", "Operate:Add"])]
+    public void IceMissile2(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.FastDp("冰圈2", @event.SourceId(), 4000, 9);
+        dp.InnerScale = new Vector2(6);
+        dp.Radian = float.Pi * 2;
+        accessory.Method.SendDraw(0, DrawTypeEnum.Donut, dp);
+    }
+
     /*
 20:49:00.617 TargetIcon 0x0043
+20:49:05.726|484F|寒冰导弹|
 20:49:05.986|Add|400065BF|BNpcID|1E958D|ModelStatus|2304|
 20:49:06.478|Change|400065BF|ModelStatus|0|
 20:49:10.011|Add|400065C1|BNpcID|1E958E|ModelStatus|2304|
@@ -583,20 +778,21 @@ public class TheEpicOfAlexander
 20:49:16.381|Change|400065C1|ModelStatus|2304|
 20:49:19.400|Remove|400065C1|
      */
+    // TODO 冰圈大小6-9
 
     [ScriptMethod(EventTypeEnum.AddCombatant, "等离子护盾", ["DataId:11343"])]
     public void PlasmaShield(Event @event, ScriptAccessory accessory)
     {
-        var dp = accessory.FastDp("等离子护盾", @event.SourceId(), 30000, 3, true);
+        var dp = accessory.FastDp("等离子护盾", @event.SourceId(), 30000, 5, true);
         accessory.Method.SendDraw(0, DrawTypeEnum.Fan, dp);
     }
-    
+
     [ScriptMethod(EventTypeEnum.RemoveCombatant, "等离子护盾清除", ["DataId:11343"], false)]
     public void PlasmaShieldClear(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw("等离子护盾");
     }
-    
+
     // 18501->读条大火炎放射 18502->实际伤害大火炎放射
     [ScriptMethod(EventTypeEnum.StartCasting, "大火炎放射", ["ActionId:18501"])]
     public void FlareThrower(Event @event, ScriptAccessory accessory)
@@ -633,9 +829,8 @@ public class TheEpicOfAlexander
 
     private void P3Reset()
     {
-        
     }
-    
+
     private void AlphaSword(ScriptAccessory accessory, uint duration, uint delay)
     {
         // 18539 阿尔法之剑 扇形90 半径25 间隔1.07约成1.1
@@ -685,7 +880,7 @@ public class TheEpicOfAlexander
         var cruiseChaser = IbcHelper.GetFirstByDataId(11342);
         if (cruiseChaser == null) return;
         var ccVector = Vector3.Normalize(cruiseChaser.Position - Center);
-        
+
         Vector3 wpos;
         if (myself.HasStatus(1121)) // 判决确定：加重罪 电
             wpos = ccVector.V3YRotate(180) * 18;
@@ -721,6 +916,10 @@ public class TheEpicOfAlexander
         accessory.Method.SendDraw(0, DrawTypeEnum.Fan, dp);
     }
 
+    [ScriptMethod(EventTypeEnum.StartCasting, "P3一运正义喷火", ["ActionId:18523"])]
+    public void PlayFlareThrower(Event @event, ScriptAccessory accessory) => FlareThrower(accessory, 4600, 15500, 3);
+    // 18527 审判结晶
+
     [ScriptMethod(EventTypeEnum.ActionEffect, "P3一运后半飞机劈刀", ["ActionId:18527"])]
     public void PlayAlphaSword(Event @event, ScriptAccessory accessory)
     {
@@ -729,10 +928,49 @@ public class TheEpicOfAlexander
         AlphaSword(accessory, 5000, 1000);
     }
 
+    [ScriptMethod(EventTypeEnum.ActionEffect, "P3一运后半", ["ActionId:18526", "TargetIndex:1"])]
+    public void Inception(Event @event, ScriptAccessory accessory)
+    {
+        // TODO 11422 为一运后半真心位移目标，亚历山大出现放十字圣礼之处
+        var alex = IbcHelper.GetFirstByDataId(11422);
+        if (alex == null) return;
+        var dp = accessory.FastDp("一运后半十字", alex.EntityId, 8300, new Vector2(16, 100));
+        accessory.Method.SendDraw(0, DrawTypeEnum.Straight, dp);
+        dp.Rotation = float.Pi / 2;
+        accessory.Method.SendDraw(0, DrawTypeEnum.Straight, dp);
 
-    [ScriptMethod(EventTypeEnum.StartCasting, "P3一运正义喷火", ["ActionId:18523"])]
-    public void PlayFlareThrower(Event @event, ScriptAccessory accessory) => FlareThrower(accessory, 4600, 15500, 3);
-    // 18527 审判结晶
+        bool isLeft;
+        var myIdx = accessory.MyIndex();
+        if (myIdx < 2)
+            isLeft = true;
+        else if (myIdx < 4)
+            isLeft = false;
+        else
+            isLeft = ((IBattleChara)accessory.Data.Objects.SearchByEntityId(accessory.Data.Me)).HasStatus(1122);
+        var wpos = new Vector3(isLeft ? -19 : +19, 0, 0).V3YRotate((Center - alex.Position).V3YAngle()) + Center;
+        dp = accessory.WaypointDp(wpos, 8000);
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+
+        var stack = accessory.GetParty().FirstOrDefault(x => x.StatusList.Any(s => s.StatusId == 1122));
+        if (stack != null)
+        {
+            dp = accessory.FastDp("集团罪", stack.EntityId, 8000, 4, isLeft);
+            accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
+        }
+
+        if (myIdx == 1)
+            wpos = new Vector3(119, 0, 100);
+        else if (myIdx == 2)
+            wpos = new Vector3(100, 0, 98.5f);
+        else if (myIdx == 3)
+            wpos = new Vector3(100, 0, 101.5f);
+        else if (myIdx > 3 && ((IBattleChara)accessory.Data.Objects.SearchByEntityId(accessory.Data.Me)).HasStatus(1124))
+            wpos = new Vector3(98.5f, 0, 100);
+        else
+            wpos = new Vector3(106, 0, 100);
+        dp = accessory.WaypointDp(wpos, 6400, 8000);
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+    }
 
     [ScriptMethod(EventTypeEnum.StartCasting, "P3二运飞机", ["ActionId:19215"])]
     public void LimitCutP3(Event @event, ScriptAccessory accessory)
@@ -741,7 +979,7 @@ public class TheEpicOfAlexander
         P0LimitCutReset();
         _p0LimitCutEnabled = true;
     }
-    
+
     [ScriptMethod(EventTypeEnum.TargetIcon, "P3麻将指路1", ["Id:regex:^(00(4F|5[0123456]))$"])]
     public void LimitCutP3Guide1(Event @event, ScriptAccessory accessory)
     {
@@ -764,6 +1002,7 @@ public class TheEpicOfAlexander
             5 => accessory.WaypointDp(new Vector3(bjRight ? -19 : +19, 0, +00) + Center, 3300),
             6 => accessory.WaypointDp(new Vector3(bjRight ? +19 : -19, 0, +00) + Center, 9500),
             7 => accessory.WaypointDp(new Vector3(bjRight ? -19 : +19, 0, +00) + Center, 9500),
+            // _ => accessory.WaypointDp(Center, 9500),
         };
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
         // 9.5 到飞机第一刀
@@ -787,12 +1026,16 @@ public class TheEpicOfAlexander
         switch (myIdx)
         {
             case 0:
-                dp1 = accessory.WaypointDp(new Vector3(bjRight ? +19 : -19, 0, +00) + Center,8600, 6300);
-                dp2 = accessory.WaypointDp(@event.SourcePosition(),4200, 14900);
+                dp1 = accessory.WaypointDp(new Vector3(bjRight ? +19 : -19, 0, +00) + Center, 8600, 6300);
+                dp2 = accessory.WaypointDp(
+                    new Vector3(MathF.Sign(@event.SourcePosition().X - 100) * 13 + 100, 0, @event.SourcePosition().Z),
+                    4200, 14900);
                 break;
             case 1:
-                dp1 = accessory.WaypointDp(new Vector3(bjRight ? -19 : +19, 0, +00) + Center,8600, 6300);
-                dp2 = accessory.WaypointDp(@event.SourcePosition(),4200, 14900);
+                dp1 = accessory.WaypointDp(new Vector3(bjRight ? -19 : +19, 0, +00) + Center, 8600, 6300);
+                dp2 = accessory.WaypointDp(
+                    new Vector3(MathF.Sign(@event.SourcePosition().X - 100) * 13 + 100, 0, @event.SourcePosition().Z),
+                    4200, 14900);
                 break;
             case 2:
                 dp1 = accessory.WaypointDp(new Vector3(bjRight ? +19 : -19, 0, +00) + Center, 4200, 10700);
@@ -805,28 +1048,37 @@ public class TheEpicOfAlexander
                 dp2.DestoryAt = 1;
                 break;
             case 4:
-                dp1 = accessory.WaypointDp(@event.SourcePosition(), 10700);
-                dp2 = accessory.WaypointDp(new Vector3(bjRight ? +13 : -13, 0, -13) + Center,4200, 10700);
+                dp1 = accessory.WaypointDp(
+                    new Vector3(MathF.Sign(@event.SourcePosition().X - 100) * 18 + 100, 0, @event.SourcePosition().Z),
+                    10700);
+                dp2 = accessory.WaypointDp(new Vector3(bjRight ? +13 : -13, 0, -13) + Center, 4200, 10700);
                 break;
             case 5:
-                dp1 = accessory.WaypointDp(@event.SourcePosition(), 10700);
-                dp2 = accessory.WaypointDp(new Vector3(bjRight ? -13 : +13, 0, -13) + Center,4200, 10700);
+                dp1 = accessory.WaypointDp(
+                    new Vector3(MathF.Sign(@event.SourcePosition().X - 100) * 18 + 100, 0, @event.SourcePosition().Z),
+                    10700);
+                dp2 = accessory.WaypointDp(new Vector3(bjRight ? -13 : +13, 0, -13) + Center, 4200, 10700);
                 break;
             case 6:
-                dp1 = accessory.WaypointDp(@event.SourcePosition(),4200, 10700);
-                dp2 = accessory.WaypointDp(new Vector3(bjRight ? +13 : -13, 0, +13) + Center,4200, 14900);
+                dp1 = accessory.WaypointDp(
+                    new Vector3(MathF.Sign(@event.SourcePosition().X - 100) * 16 + 100, 0, @event.SourcePosition().Z),
+                    4200, 10700);
+                dp2 = accessory.WaypointDp(new Vector3(bjRight ? +13 : -13, 0, +13) + Center, 4200, 14900);
                 break;
             case 7:
-                dp1 = accessory.WaypointDp(@event.SourcePosition(),4200, 10700);
-                dp2 = accessory.WaypointDp(new Vector3(bjRight ? -13 : +13, 0, +13) + Center,4200, 14900);
+                dp1 = accessory.WaypointDp(
+                    new Vector3(MathF.Sign(@event.SourcePosition().X - 100) * 16 + 100, 0, @event.SourcePosition().Z),
+                    4200, 10700);
+                dp2 = accessory.WaypointDp(new Vector3(bjRight ? -13 : +13, 0, +13) + Center, 4200, 14900);
                 break;
             default:
                 return;
         }
+
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp1);
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp2);
     }
-    
+
 
     [ScriptMethod(EventTypeEnum.StartCasting, "十字圣礼", ["ActionId:18519"])]
     public void Sacrament(Event @event, ScriptAccessory accessory)
@@ -972,7 +1224,7 @@ public class TheEpicOfAlexander
         _p4ShadowPlayers.Clear();
     }
 
-    private bool GetIndex(uint id, out int index)
+    private bool P4GetIndex(uint id, out int index)
     {
         if (!_p4ShadowPlayers.Contains(id))
         {
@@ -991,7 +1243,7 @@ public class TheEpicOfAlexander
     {
         // 未来确定α
         // 0为分摊 1为大圈 234为电 567无
-        if (!GetIndex(accessory.Data.Me, out var myidx)) return;
+        if (!P4GetIndex(accessory.Data.Me, out var myidx)) return;
         var wpos = myidx == 1 ? new Vector3(100, 0, 81) : new Vector3(100, 0, 119);
 
         var dp = accessory.WaypointDp(wpos, 10000);
@@ -1020,7 +1272,7 @@ public class TheEpicOfAlexander
         if (pos.Z > -15) return;
         pos = Vector3.Normalize(pos.WithX(-pos.X)) * 18;
         Vector3 wpos = pos + Center;
-        if (!GetIndex(accessory.Data.Me, out var myidx)) return;
+        if (!P4GetIndex(accessory.Data.Me, out var myidx)) return;
         switch (myidx)
         {
             case 0 or 5 or 6 or 7:
@@ -1069,7 +1321,7 @@ public class TheEpicOfAlexander
     [ScriptMethod(EventTypeEnum.StartCasting, "2测", ["ActionId:19220"])]
     public void FateCalibrationBeta(Event @event, ScriptAccessory accessory)
     {
-        if (!GetIndex(accessory.Data.Me, out var myIdx)) return;
+        if (!P4GetIndex(accessory.Data.Me, out var myIdx)) return;
         var isLight = myIdx % 2 > 0;
         // 0为大暗 1为大光 2小暗 3小光 4近线小暗 5近小光 6远线小暗 7远小光
         // 怀疑分摊在3
@@ -1165,7 +1417,7 @@ public class TheEpicOfAlexander
     public void BetaStack(Event @event, ScriptAccessory accessory)
     {
         // 18593->幻影制导动画技能分摊 18862->制导动画技能
-        if (!GetIndex(accessory.Data.Me, out var myIdx)) return;
+        if (!P4GetIndex(accessory.Data.Me, out var myIdx)) return;
         var isLight = myIdx % 2 > 0;
 
         var dp = accessory.FastDp("2测分摊", _p4ShadowPlayers[0], 6100, 6, !isLight);
@@ -1435,14 +1687,12 @@ public static class EventExtensions
 
 public static class AccessoryExtensions
 {
-    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, uint owner, uint duration,
-        float radius, bool safe = false)
+    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, uint owner, uint duration, float radius, bool safe = false)
     {
         return FastDp(accessory, name, owner, duration, new Vector2(radius), safe);
     }
 
-    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, uint owner, uint duration,
-        Vector2 scale, bool safe = false)
+    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, uint owner, uint duration, Vector2 scale, bool safe = false)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = name;
@@ -1453,14 +1703,12 @@ public static class AccessoryExtensions
         return dp;
     }
 
-    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, Vector3 pos, uint duration,
-        float radius, bool safe = false)
+    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, Vector3 pos, uint duration, float radius, bool safe = false)
     {
         return FastDp(accessory, name, pos, duration, new Vector2(radius), safe);
     }
 
-    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, Vector3 pos, uint duration,
-        Vector2 scale, bool safe = false)
+    public static DrawPropertiesEdit FastDp(this ScriptAccessory accessory, string name, Vector3 pos, uint duration, Vector2 scale, bool safe = false)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = name;
@@ -1505,20 +1753,28 @@ public static class AccessoryExtensions
     {
         return accessory.Data.PartyList.IndexOf(accessory.Data.Me);
     }
+
+    public static IEnumerable<IPlayerCharacter> GetParty(this ScriptAccessory sa)
+    {
+        foreach (var pid in sa.Data.PartyList)
+        {
+            yield return (IPlayerCharacter)sa.Data.Objects.SearchByEntityId(pid);
+        }
+    }
+
+    public static IPlayerCharacter GetMe(this ScriptAccessory sa)
+    {
+        return (IPlayerCharacter)sa.Data.Objects.SearchByEntityId(sa.Data.Me);
+    }
 }
 
 public static class IbcHelper
 {
-    public static IBattleChara? GetMe()
-    {
-        return Svc.ClientState.LocalPlayer;
-    }
-    
     public static IBattleChara? GetByEntityId(uint id)
     {
         return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
     }
-    
+
     public static IGameObject? GetFirstByDataId(uint dataId)
     {
         return Svc.Objects.FirstOrDefault(x => x.DataId == dataId);
@@ -1533,6 +1789,11 @@ public static class IbcHelper
     {
         return chara.StatusList.Any(x => x.StatusId == statusId);
     }
+    
+    public static bool HasStatus(this IBattleChara chara, uint[] statusIds)
+    {
+        return chara.StatusList.Any(x => statusIds.Contains(x.StatusId));
+    }
 }
 
 public static class MathHelper
@@ -1541,7 +1802,7 @@ public static class MathHelper
     {
         return V3YAngle(v, Vector3.Zero, toRadian);
     }
-    
+
     public static float V3YAngle(this Vector3 v, Vector3 origin, bool toRadian = false)
     {
         var angle = ((MathF.Atan2(v.Z - origin.Z, v.X - origin.X) - MathF.Atan2(1, 0)) / float.Pi * -180 + 360) % 360;
