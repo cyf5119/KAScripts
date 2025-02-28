@@ -23,7 +23,7 @@ using KodakkuAssist.Module.GameOperate;
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
 [ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战.未完工",
-    territorys: [887], version: "0.0.2.0", author: "Cyf5119", note: Note)]
+    territorys: [887], version: "0.0.2.1", author: "Cyf5119", note: Note)]
 public class TheEpicOfAlexander
 {
     private const string Note = "有问题来DC反馈。\n我也忘了我更新了什么了。\n/e KASCLEAR 清理残余画图";
@@ -1511,10 +1511,12 @@ public class TheEpicOfAlexander
         foreach (var fire in fires)
         {
             if (AlmostEqual(pos, fire))
-                _p4AlmightyJudgments.Add(fire);
-            if (_p4AlmightyJudgments.Count == 2)
             {
-                AlmightyJudgmentGuide(accessory);
+                _p4AlmightyJudgments.Add(fire);
+                if (_p4AlmightyJudgments.Count == 2)
+                {
+                    AlmightyJudgmentGuide(accessory);
+                }
             }
         }
     }
@@ -1555,7 +1557,7 @@ public class TheEpicOfAlexander
         dp = accessory.WaypointDp(wpos2, 4000, 6000);
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
 
-        dp = accessory.FastDp("地火预指路", wpos1, 6000, 1);
+        dp = accessory.FastDp("地火预指路", wpos1, 6000, 2);
         dp.TargetPosition = wpos2;
         dp.ScaleMode = ScaleMode.YByDistance;
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
@@ -1719,8 +1721,7 @@ public static class AccessoryExtensions
         return dp;
     }
 
-    public static DrawPropertiesEdit WaypointDp(this ScriptAccessory accessory, uint target, uint duration,
-        uint delay = 0, string name = "Waypoint")
+    public static DrawPropertiesEdit WaypointDp(this ScriptAccessory accessory, uint target, uint duration, uint delay = 0, string name = "Waypoint")
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = name;
@@ -1734,8 +1735,7 @@ public static class AccessoryExtensions
         return dp;
     }
 
-    public static DrawPropertiesEdit WaypointDp(this ScriptAccessory accessory, Vector3 pos, uint duration,
-        uint delay = 0, string name = "Waypoint")
+    public static DrawPropertiesEdit WaypointDp(this ScriptAccessory accessory, Vector3 pos, uint duration, uint delay = 0, string name = "Waypoint")
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = name;
