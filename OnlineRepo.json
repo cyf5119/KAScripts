@@ -1,12 +1,12 @@
 [
   {
-    "Name": "亚历山大绝境战.未完工",
+    "Name": "亚历山大绝境战",
     "Guid": "E047803D-38D5-45B4-AF48-71C0691CDCC9",
-    "Version": "0.0.2.1",
+    "Version": "0.0.2.2",
     "Author": "Cyf5119",
     "TerritoryIds": [887],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/05-Shadowbringers/TheEpicOfAlexander.cs",
-    "UpdateInfo": "我也忘了我更了什么，总之更新就对了。"
+    "UpdateInfo": "加了几个颜色设置。"
   },
   {
     "Name": "无敌提示宏",
