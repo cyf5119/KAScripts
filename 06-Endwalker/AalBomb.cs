@@ -16,24 +16,23 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Endwalker.AalBomb;
 
-[ScriptType(guid: "2F27EFB2-CE87-4E6A-9D83-60FE4CC26141", name: "AalBomb", territorys: [1179, 1180], version: "0.0.0.3", author: "Cyf5119", "已修改休眠逻辑。")]
+[ScriptType(guid: "2F27EFB2-CE87-4E6A-9D83-60FE4CC26141", name: "AalBomb", territorys: [1179, 1180], version: "0.0.0.3",
+    author: "Cyf5119", "已修改休眠逻辑。")]
 public class AalBomb
 {
-    [UserSetting(note:"每轮炸弹检测间隔（毫秒）")]
-    public int Prop1 { get; set; } = 100;
-    
-    [UserSetting(note:"炸弹检测轮数上限")]
-    public int Prop2 { get; set; } = 300;
-    
+    [UserSetting(note: "每轮炸弹检测间隔（毫秒）")] public int Prop1 { get; set; } = 100;
+
+    [UserSetting(note: "炸弹检测轮数上限")] public int Prop2 { get; set; } = 300;
+
     public int Is2nd = 0;
     public List<IBattleChara> bombs = new List<IBattleChara>();
-    
+
     public void Init(ScriptAccessory accessory)
     {
         Is2nd = 0;
         bombs.Clear();
     }
-    
+
     private static bool ParseObjectId(string? idStr, out uint id)
     {
         id = 0;
@@ -55,13 +54,13 @@ public class AalBomb
     {
         Is2nd = 0;
     }
-    
+
     [ScriptMethod(EventTypeEnum.StartCasting, "RingARingOExplosions", ["ActionId:regex:^(35164|35193)$"], false)]
     public void RingARingOExplosions(Event @event, ScriptAccessory accessory)
     {
         Is2nd++;
     }
-    
+
     [ScriptMethod(name: "生成炸弹", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^(1648[19])$"])]
     public void BombSpawn(Event @event, ScriptAccessory accessory)
     {
@@ -72,6 +71,7 @@ public class AalBomb
             // accessory.Method.SendChat("/e source is null!");
             return;
         }
+
         // var timelineAnimationState0 = source.Struct()->Timeline.AnimationState[0];
         // accessory.Method.SendChat($"/e 生成 {sid:X}:{timelineAnimationState0}.");
         lock (bombs)
@@ -82,7 +82,8 @@ public class AalBomb
         }
     }
 
-    [ScriptMethod(name: "炸弹清除", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(35165|35194)$"])]
+    [ScriptMethod(name: "炸弹清除", eventType: EventTypeEnum.ActionEffect,
+        eventCondition: ["ActionId:regex:^(35165|35194)$"])]
     public void BombClear(Event @event, ScriptAccessory accessory)
     {
         bombs.Clear();
@@ -92,8 +93,8 @@ public class AalBomb
     private unsafe bool BombState(IBattleChara bomb)
     {
         return bomb.Struct()->Timeline.AnimationState[0] > 0;
-    } 
-    
+    }
+
     private async void BombDetect(ScriptAccessory accessory)
     {
         for (int i = 0; i < Prop2; i++)
@@ -108,6 +109,7 @@ public class AalBomb
                     return;
                 }
             }
+
             await Task.Delay(Prop1);
         }
     }
@@ -121,16 +123,15 @@ public class AalBomb
         dp.Scale = new Vector2(12);
         dp.Owner = bomb0.EntityId;
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
-        
+
         var bomb1 = (IBattleChara?)accessory.Data.Objects.SearchById(bomb0.Struct()->Vfx.Tethers[0].TargetId);
         if (bomb1 == null) return;
         dp.Owner = bomb1.EntityId;
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
-        
+
         var bomb2 = (IBattleChara?)accessory.Data.Objects.SearchById(bomb1.Struct()->Vfx.Tethers[0].TargetId);
         if (bomb2 == null) return;
         dp.Owner = bomb2.EntityId;
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
 }
-

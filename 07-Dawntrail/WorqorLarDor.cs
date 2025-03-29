@@ -14,14 +14,14 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Dawntrail.WorqorLarDor;
 
-[ScriptType(guid: "E9ABB865-498F-4C4F-8071-8A2E9F0589F6", name: "艳翼蛇鸟歼灭战", territorys: [1195], version: "0.0.0.1", author:"Cyf5119")]
+[ScriptType(guid: "E9ABB865-498F-4C4F-8071-8A2E9F0589F6", name: "艳翼蛇鸟歼灭战", territorys: [1195], version: "0.0.0.2", author: "Cyf5119")]
 public class WorqorLarDor
 {
     public void Init(ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw(".*");
     }
-    
+
     [ScriptMethod(name: "蛇行吐息", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:36156"])]
     public void SusurrantBreath(Event @event, ScriptAccessory accessory)
     {
@@ -34,7 +34,7 @@ public class WorqorLarDor
         dp.Radian = float.Pi / 180 * 80;
         accessory.Method.SendDraw(0, DrawTypeEnum.Fan, dp);
     }
-    
+
     [ScriptMethod(name: "蛇行强袭", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:36158"])]
     public void SlitheringStrike(Event @event, ScriptAccessory accessory)
     {
@@ -46,7 +46,7 @@ public class WorqorLarDor
         dp.Scale = new Vector2(24);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
-    
+
     [ScriptMethod(name: "蛇行盘绕", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:36160"])]
     public void StranglingCoil(Event @event, ScriptAccessory accessory)
     {
@@ -60,7 +60,7 @@ public class WorqorLarDor
         dp.Radian = float.Pi * 2;
         accessory.Method.SendDraw(0, DrawTypeEnum.Donut, dp);
     }
-    
+
     [ScriptMethod(name: "灾祸冲", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:36189"])]
     public void Ruinfall(Event @event, ScriptAccessory accessory)
     {
@@ -74,7 +74,7 @@ public class WorqorLarDor
         dp.Rotation = 0;
         accessory.Method.SendDraw(0, DrawTypeEnum.Rect, dp);
     }
-    
+
     [ScriptMethod(name: "灾厄落雷", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:36174"])]
     public void BlightedBolt(Event @event, ScriptAccessory accessory)
     {
@@ -86,7 +86,7 @@ public class WorqorLarDor
         dp.Scale = new Vector2(7);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
-    
+
     [ScriptMethod(name: "灾厄之鸣", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(34722|26708)$"])]
     public void CalamitousCry(Event @event, ScriptAccessory accessory)
     {
@@ -112,7 +112,7 @@ public class WorqorLarDor
         dp.Scale = new Vector2(5, 50);
         accessory.Method.SendDraw(0, DrawTypeEnum.Rect, dp);
     }
-    
+
     [ScriptMethod(name: "冰法阵", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:17555"])]
     public void ChillingCataclysm(Event @event, ScriptAccessory accessory)
     {
@@ -133,7 +133,7 @@ public class WorqorLarDor
     [ScriptMethod(name: "北十字星", eventType: EventTypeEnum.EnvControl, eventCondition: ["Index:00000002"])]
     public void NorthernCross(Event @event, ScriptAccessory accessory)
     {
-        if(!(@event["Id"] == "00020001" || @event["Id"] == "00200010")) return;
+        if (!(@event["Id"] == "00020001" || @event["Id"] == "00200010")) return;
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "冰法阵";
         dp.Color = accessory.Data.DefaultDangerColor;

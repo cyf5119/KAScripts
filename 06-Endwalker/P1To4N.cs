@@ -16,12 +16,12 @@ using KodakkuAssist.Module.Draw.Manager;
 
 namespace Cyf5119Script.Endwalker.P1To4N;
 
-[ScriptType(guid: "AD2A9D42-E040-442E-A8F2-86F7D13768BD", name: "P1N-P4N捆绑包", territorys: [1002, 1004, 1006, 1008], 
+[ScriptType(guid: "AD2A9D42-E040-442E-A8F2-86F7D13768BD", name: "P1N-P4N捆绑包", territorys: [1002, 1004, 1006, 1008],
     version: "0.0.0.1", author: "Cyf5119", note: "包含P1N,P2N,P3N,P4N")]
 public class P1To4N
 {
     // private uint _status = 0;
-    
+
     public void Init(ScriptAccessory accessory)
     {
         // _status = 0;
@@ -35,7 +35,7 @@ public class P1To4N
     {
         accessory.Method.TextInfo("单体死刑", 5000);
     }
-    
+
     [ScriptMethod(EventTypeEnum.StartCasting, "P1N-AOE", ["ActionId:regex:^(26100|26089|26090)$"])]
     public void P1NAOE(Event @event, ScriptAccessory accessory)
     {
@@ -196,9 +196,9 @@ public class P1To4N
     }
 
     #endregion
-    
+
     #region P4N
-    
+
     [ScriptMethod(EventTypeEnum.StartCasting, "P4N-优雅除脏", ["ActionId:27216"])]
     public void ElegantEvisceration(Event @event, ScriptAccessory accessory)
     {
@@ -246,7 +246,6 @@ public class P1To4N
     }
 
     #endregion
-    
 }
 
 public static class EventExtensions
@@ -266,6 +265,7 @@ public static class EventExtensions
             return false;
         }
     }
+
     public static uint ActionId(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["ActionId"]);
@@ -285,7 +285,7 @@ public static class EventExtensions
     {
         return JsonConvert.DeserializeObject<Vector3>(@event["EffectPosition"]);
     }
-    
+
     public static uint StatusId(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["StatusID"]);

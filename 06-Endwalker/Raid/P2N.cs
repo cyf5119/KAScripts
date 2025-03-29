@@ -264,26 +264,3 @@ public static class AccessoryExtensions
         return dp;
     }
 }
-
-public static class IbcHelper
-{
-    public static IBattleChara? GetById(uint id)
-    {
-        return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
-    }
-
-    public static IBattleChara? GetMe()
-    {
-        return Svc.ClientState.LocalPlayer;
-    }
-
-    public static IGameObject? GetFirstByDataId(uint dataId)
-    {
-        return Svc.Objects.Where(x => x.DataId == dataId).FirstOrDefault();
-    }
-
-    public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
-    {
-        return Svc.Objects.Where(x => x.DataId == dataId);
-    }
-}

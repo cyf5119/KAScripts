@@ -15,15 +15,14 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Dawntrail.TheStrayboroughDeadwalk;
 
-[ScriptType(guid: "32BC9D47-D623-507F-CDBF-E17EFEA73FA4", name: "噩梦乐园迷途鬼区", territorys: [1204], version: "0.0.0.6", author:"Cyf5119")]
+[ScriptType(guid: "32BC9D47-D623-507F-CDBF-E17EFEA73FA4", name: "噩梦乐园迷途鬼区", territorys: [1204], version: "0.0.0.7", author: "Cyf5119")]
 public class TheStrayboroughDeadwalk
 {
-    [UserSetting(note:"好脑袋的朋友提示时间（毫秒）")]
-    public int Prop1 { get; set; } = 60000;
-    
+    [UserSetting(note: "好脑袋的朋友提示时间（毫秒）")] public int Prop1 { get; set; } = 60000;
+
     private List<Vector3> tethered = [];
     private uint stackRecord = 0;
-    
+
     public void Init(ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw(".*");
@@ -84,8 +83,9 @@ public class TheStrayboroughDeadwalk
         dp.Scale = new Vector2(4);
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.DestoryAt = 1600;
-        
-        var target = FakeParty.Get().MinBy(x => Vector3.Distance(pos, x.Position));
+
+        // var target = FakeParty.Get().MinBy(x => Vector3.Distance(pos, x.Position));
+        var target = accessory.Data.Objects.Where(y => accessory.Data.PartyList.Contains(y.EntityId)).MinBy(x => Vector3.Distance(pos, x.Position));
         if (target is null) return;
         await Task.Delay(2000);
         for (int i = 0; i < 4; i++)
@@ -127,7 +127,7 @@ public class TheStrayboroughDeadwalk
         accessory.Method.RemoveDraw($"好脑袋的朋友 {sid} 一");
         accessory.Method.RemoveDraw($"好脑袋的朋友 {sid} 二");
     }
-    
+
     // 保住人了
     [ScriptMethod(name: "好脑袋的朋友们清除二", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:36535"], userControl: false)]
     public void Boss1FriendsClear2(Event @event, ScriptAccessory accessory)
@@ -161,6 +161,7 @@ public class TheStrayboroughDeadwalk
 
     #endregion
 
+    
     #region BOSS2
 
     [ScriptMethod(name: "老二AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:36725"])]
@@ -273,9 +274,10 @@ public class TheStrayboroughDeadwalk
         return (Vector3.Distance(pos1, tethered[0]) < 1 && Vector3.Distance((Vector3)pos2, tethered[1]) < 1) ||
                (Vector3.Distance(pos1, tethered[1]) < 1 && Vector3.Distance((Vector3)pos2, tethered[0]) < 1);
     }
-    
+
     #endregion
 
+    
     #region BOSS3
 
     [ScriptMethod(name: "老三AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:37168"])]
@@ -301,12 +303,12 @@ public class TheStrayboroughDeadwalk
         dp.Scale = new Vector2(8, 80);
         dp.DestoryAt = 5000;
         dp.Owner = sid;
-        
+
         await Task.Delay(100);
         dp.TargetObject = stackRecord;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
-    
+
     [ScriptMethod(name: "老三辣尾", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:37139"])]
     public void Boss3Rect1(Event @event, ScriptAccessory accessory)
     {
@@ -317,10 +319,10 @@ public class TheStrayboroughDeadwalk
         dp.Scale = new Vector2(16, 80);
         dp.DestoryAt = 6700;
         dp.Owner = sid;
-        
+
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
-    
+
     [ScriptMethod(name: "老三辣翅", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:37147"])]
     public void Boss3Rect2(Event @event, ScriptAccessory accessory)
     {
@@ -331,10 +333,10 @@ public class TheStrayboroughDeadwalk
         dp.Scale = new Vector2(12, 50);
         dp.DestoryAt = 6700;
         dp.Owner = sid;
-        
+
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
-    
+
     [ScriptMethod(name: "老三小怪", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:37340"])]
     public void Boss3Rect3(Event @event, ScriptAccessory accessory)
     {
@@ -345,7 +347,7 @@ public class TheStrayboroughDeadwalk
         dp.Scale = new Vector2(4, 40);
         dp.DestoryAt = 6000;
         dp.Owner = sid;
-        
+
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
 

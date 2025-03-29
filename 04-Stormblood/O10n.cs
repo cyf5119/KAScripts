@@ -16,13 +16,14 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Stormblood.O10n;
 
-[ScriptType(guid: "9248BFE3-D4AE-46AA-9111-AEC2DACDE893", name: "O10n", territorys: [799], version: "0.0.0.2", author: "Cyf5119")]
+[ScriptType(guid: "9248BFE3-D4AE-46AA-9111-AEC2DACDE893", name: "O10n", territorys: [799], version: "0.0.0.2",
+    author: "Cyf5119")]
 public class O10n
 {
     private bool IsCross = false;
     private uint BossId = 0;
     private bool TimeLock = false;
-    
+
     public void Init(ScriptAccessory accessory)
     {
         IsCross = false;
@@ -31,13 +32,14 @@ public class O10n
         accessory.Method.RemoveDraw(".*");
     }
 
-    [ScriptMethod(name: "CrossJudge", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:12744"], userControl: false)]
+    [ScriptMethod(name: "CrossJudge", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:12744"],
+        userControl: false)]
     public void CrossJudge(Event @event, ScriptAccessory accessory)
     {
         IsCross = true;
         BossId = @event.SourceId();
     }
-    
+
     [ScriptMethod(name: "十字", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:12744"])]
     public void Cross(Event @event, ScriptAccessory accessory)
     {
@@ -52,13 +54,14 @@ public class O10n
         accessory.Method.SendDraw(0, DrawTypeEnum.Straight, dp);
     }
 
-    [ScriptMethod(name: "CircleOrDonut", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:12743"], userControl: false)]
+    [ScriptMethod(name: "CircleOrDonut", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:12743"],
+        userControl: false)]
     public void CircleOrDonut(Event @event, ScriptAccessory accessory)
     {
         IsCross = false;
         BossId = @event.SourceId();
     }
-    
+
     [ScriptMethod(name: "钢铁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:12745"])]
     public void Circle(Event @event, ScriptAccessory accessory)
     {
@@ -71,7 +74,7 @@ public class O10n
         dp.Scale = new Vector2(14);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
-    
+
     [ScriptMethod(name: "月环", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:12747"])]
     public void Donut(Event @event, ScriptAccessory accessory)
     {
@@ -86,7 +89,7 @@ public class O10n
         dp.Radian = float.Pi * 2;
         accessory.Method.SendDraw(0, DrawTypeEnum.Donut, dp);
     }
-    
+
     [ScriptMethod(name: "大地摇动", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0028"])]
     public void EarthShaker(Event @event, ScriptAccessory accessory)
     {
@@ -100,7 +103,7 @@ public class O10n
         dp.Radian = float.Pi / 180 * 30;
         accessory.Method.SendDraw(0, DrawTypeEnum.Fan, dp);
     }
-    
+
     [ScriptMethod(name: "分摊", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:12742"])]
     public void AkhMorn(Event @event, ScriptAccessory accessory)
     {
@@ -112,7 +115,7 @@ public class O10n
         dp.Scale = new Vector2(6);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
-    
+
     [ScriptMethod(name: "俯冲", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:12865"])]
     public void Cauterize(Event @event, ScriptAccessory accessory)
     {
@@ -124,7 +127,7 @@ public class O10n
         dp.Scale = new Vector2(20, 60);
         accessory.Method.SendDraw(0, DrawTypeEnum.Rect, dp);
     }
-    
+
     [ScriptMethod(name: "真红射线", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:9290"])]
     public async void ScarletThread(Event @event, ScriptAccessory accessory)
     {
@@ -141,7 +144,7 @@ public class O10n
         await Task.Delay(2000);
         TimeLock = false;
     }
-    
+
     [ScriptMethod(name: "百京核爆", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:13871"])]
     public void Exaflare(Event @event, ScriptAccessory accessory)
     {

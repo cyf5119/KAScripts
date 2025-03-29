@@ -9,9 +9,6 @@ using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using ECommons;
-using ECommons.DalamudServices;
-using ECommons.GameFunctions;
-using ECommons.MathHelpers;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
@@ -20,12 +17,12 @@ using KodakkuAssist.Module.GameOperate;
 
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
-[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战", territorys: [887], version: "0.0.2.2", author: "Cyf5119", note: Note, updateInfo: UpdateInfo)]
+[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战", territorys: [887], version: "0.0.2.3", author: "Cyf5119", note: Note, updateInfo: UpdateInfo)]
 public class TheEpicOfAlexander
 {
     private const string Note = "有问题来DC反馈。\n画图基于设置的小队职能进行绘制，请确保设置准确无误。\n/e KASCLEAR 清理残余画图";
-    private const string UpdateInfo = "有问题来DC反馈。\n加了几个颜色设置。";
-
+    private const string UpdateInfo = "有问题来DC反馈。\n使用可达鸭提供的ObjectTable";
+    
     #region 用户设置
 
     [UserSetting("P2仅显示自己的传毒提示")] public static bool P2RotsSelfOnly { get; set; } = false;
@@ -126,6 +123,7 @@ public class TheEpicOfAlexander
 
     #endregion
 
+    
     #region 麻将控制
 
     private void P0LimitCutReset()
@@ -176,6 +174,7 @@ public class TheEpicOfAlexander
 
     #endregion
 
+    
     #region 超级跳与回头扫
 
     // 18505->读条超级跳越 18506->实际伤害超级跳越
@@ -380,6 +379,7 @@ public class TheEpicOfAlexander
 
     #endregion
 
+    
     #region 万变水波
 
     private void ProteanWaves(ScriptAccessory sa, uint sid, uint delay, uint times)
@@ -617,6 +617,7 @@ public class TheEpicOfAlexander
 
     #endregion
 
+    
     #region P2
 
     private void P2Reset()
@@ -770,22 +771,6 @@ public class TheEpicOfAlexander
         sa.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
 
-    /*
-20:49:00.617 TargetIcon 0x0043
-20:49:05.726|484F|寒冰导弹|
-20:49:05.986|Add|400065BF|BNpcID|1E958D|ModelStatus|2304|
-20:49:06.478|Change|400065BF|ModelStatus|0|
-20:49:10.011|Add|400065C1|BNpcID|1E958E|ModelStatus|2304|
-20:49:10.011|Change|400065C1|ModelStatus|0|
-20:49:12.960|Change|400065BF|ModelStatus|256|
-20:49:13.466|Change|400065BF|ModelStatus|2304|
-20:49:15.970|Change|400065C1|ModelStatus|256|
-20:49:16.081|Remove|400065BF|
-20:49:16.381|Change|400065C1|ModelStatus|2304|
-20:49:19.400|Remove|400065C1|
-     */
-    // TODO 冰圈大小6-9
-
     [ScriptMethod(name: "P2-等离子护盾", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:11343"])]
     public void PlasmaShield(Event evt, ScriptAccessory sa)
     {
@@ -814,7 +799,7 @@ public class TheEpicOfAlexander
     [ScriptMethod(name: "P2-螺旋桨强风排队提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18482"])]
     public void PropellerWind(Event evt, ScriptAccessory sa)
     {
-        var ice = IbcHelper.GetFirstByDataId(0x2C81);
+        var ice = sa.Data.Objects.FirstOrDefault(x => x.DataId == 0x2C81);
         if (ice == null) return;
         var dp = sa.FastDp("螺旋桨强风排队提示", evt.SourceId(), 6000, new Vector2(1, 40));
         dp.TargetObject = ice.EntityId;
@@ -831,6 +816,7 @@ public class TheEpicOfAlexander
 
     #endregion
 
+    
     #region P3
 
     private void P3Reset()
@@ -840,7 +826,7 @@ public class TheEpicOfAlexander
     private void AlphaSword(ScriptAccessory sa, uint duration, uint delay)
     {
         // 18539 阿尔法之剑 扇形90 半径25 间隔1.07约成1.1
-        var cruiseChaser = IbcHelper.GetFirstByDataId(11342);
+        var cruiseChaser = sa.Data.Objects.FirstOrDefault(x => x.DataId == 11342);
         if (cruiseChaser == null) return;
         var dp = sa.FastDp("Alpha Sword", cruiseChaser.EntityId, duration, 25 + 5);
         dp.Delay = delay;
@@ -856,7 +842,7 @@ public class TheEpicOfAlexander
     private void FlareThrower(ScriptAccessory sa, uint duration, uint delay, uint times)
     {
         // 18540 大火炎放射 扇形90 半径100 间隔[2.141, 2.314]暂取2.3
-        var bruteJustice = IbcHelper.GetFirstByDataId(11340);
+        var bruteJustice = sa.Data.Objects.FirstOrDefault(x => x.DataId == 11340);
         if (bruteJustice == null) return;
         var dp = sa.FastDp("Flare Thrower", bruteJustice.EntityId, duration, 100);
         dp.Delay = delay;
@@ -879,11 +865,10 @@ public class TheEpicOfAlexander
         FlareThrower(sa, 7200, 6100, 2);
         // 这里时间停止了，也不需要特别准
 
-        var myself = IbcHelper.GetByEntityId(sa.Data.Me);
-        if (myself == null) return;
+        var myself = sa.GetMe();
         var myIdx = sa.MyIndex();
         var isTN = myIdx < 4;
-        var cruiseChaser = IbcHelper.GetFirstByDataId(11342);
+        var cruiseChaser = sa.Data.Objects.FirstOrDefault(x => x.DataId == 11342);
         if (cruiseChaser == null) return;
         var ccVector = Vector3.Normalize(cruiseChaser.Position - Center);
 
@@ -902,8 +887,9 @@ public class TheEpicOfAlexander
         sa.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
 
+    
     #region 死刑
-
+    
     [ScriptMethod(name: "P3-圆形死刑", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:19072"])]
     public void ChasteningHeat(Event evt, ScriptAccessory sa)
     {
@@ -926,6 +912,7 @@ public class TheEpicOfAlexander
 
     #endregion
 
+    
     #region 一运
 
     [ScriptMethod(name: "P3-一运正义喷火", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18523"])]
@@ -944,7 +931,7 @@ public class TheEpicOfAlexander
     public void Inception(Event evt, ScriptAccessory sa)
     {
         // TODO 11422 为一运后半真心位移目标，亚历山大出现放十字圣礼之处
-        var alex = IbcHelper.GetFirstByDataId(11422);
+        var alex = sa.Data.Objects.FirstOrDefault(x => x.DataId == 11422);
         if (alex == null) return;
         var dp = sa.FastDp("十字圣礼", alex.EntityId, 8300, new Vector2(16, 100));
         dp.Color = SacramentColor.V4.WithW(0.5f);
@@ -959,7 +946,7 @@ public class TheEpicOfAlexander
         else if (myIdx < 4)
             isLeft = false;
         else
-            isLeft = ((IBattleChara)sa.Data.Objects.SearchByEntityId(sa.Data.Me)).HasStatus(1122);
+            isLeft = ((IBattleChara?)sa.Data.Objects.SearchByEntityId(sa.Data.Me))?.HasStatus(1122) ?? false;
         var wpos = new Vector3(isLeft ? -19 : +19, 0, 0).V3YRotate((Center - alex.Position).V3YAngle()) + Center;
         dp = sa.WaypointDp(wpos, 8000);
         sa.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
@@ -977,7 +964,7 @@ public class TheEpicOfAlexander
             wpos = new Vector3(100, 0, 98.5f);
         else if (myIdx == 3)
             wpos = new Vector3(100, 0, 101.5f);
-        else if (myIdx > 3 && ((IBattleChara)sa.Data.Objects.SearchByEntityId(sa.Data.Me)).HasStatus(1124))
+        else if (myIdx > 3 && (sa.GetMe()?.HasStatus(1124) ?? false))
             wpos = new Vector3(98.5f, 0, 100);
         else
             wpos = new Vector3(106, 0, 100);
@@ -987,6 +974,7 @@ public class TheEpicOfAlexander
 
     #endregion
 
+    
     #region 二运
 
     [ScriptMethod(name: "P3-二运飞机", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:19215"])]
@@ -1000,11 +988,11 @@ public class TheEpicOfAlexander
     [ScriptMethod(name: "P3-二运指路一阶段", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^(00(4F|5[0123456]))$"])]
     public void LimitCutP3Guide1(Event evt, ScriptAccessory sa)
     {
-        if (!Svc.Objects.Any(x => x is IBattleChara y && y.CastActionId == 18534)) return;
+        if(sa.Data.Objects.Any(x => x is IBattleChara y && y.CastActionId == 18534)) return;
         if (evt.TargetId() != sa.Data.Me) return;
         var myIdx = (int)evt.IconId() - 79;
         if (myIdx < 0 || myIdx > 7) return;
-        var bruteJustice = IbcHelper.GetFirstByDataId(11340);
+        var bruteJustice = sa.Data.Objects.FirstOrDefault(x => x.DataId == 11340);
         if (bruteJustice == null) return;
         // 以A为北 方便计算
         var bjRight = bruteJustice.Position.X - 100 > 0;
@@ -1033,7 +1021,7 @@ public class TheEpicOfAlexander
         if (!GetLimitCut(sa.Data.Me, out var myIdx)) return;
         var pos = evt.SourcePosition();
         var objRight = pos.X - 100 > 0;
-        var bruteJustice = IbcHelper.GetFirstByDataId(11340);
+        var bruteJustice = sa.Data.Objects.FirstOrDefault(x => x.DataId == 11340);
         if (bruteJustice == null) return;
         // 以A为北 方便计算
         var bjRight = bruteJustice.Position.X - 100 > 0;
@@ -1109,8 +1097,10 @@ public class TheEpicOfAlexander
 
     #endregion
 
+    
     #endregion
 
+    
     #region P4
 
     private uint _p4FinalWordLightPlayer;
@@ -1130,6 +1120,7 @@ public class TheEpicOfAlexander
         _p4AlmightyJudgments.Clear();
     }
 
+    
     #region 开场
 
     [ScriptMethod(name: "P4-开场大光", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2153"])]
@@ -1203,6 +1194,7 @@ public class TheEpicOfAlexander
 
     #endregion
 
+    
     #region 幻影记录
 
     [ScriptMethod(name: "P4幻影连线记录", eventType: EventTypeEnum.Tether, eventCondition: ["Id:0062"], userControl: false)]
@@ -1240,6 +1232,7 @@ public class TheEpicOfAlexander
 
     #endregion
 
+    
     #region 一测
 
     [ScriptMethod(name: "P4-一测一阶段", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18556"])]
@@ -1324,6 +1317,7 @@ public class TheEpicOfAlexander
 
     #endregion
 
+    
     #region 二测
 
     [ScriptMethod(name: "P4-二测指路", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:19220"])]
@@ -1459,6 +1453,7 @@ public class TheEpicOfAlexander
 
     #endregion
 
+    
     #region 死刑
 
     [ScriptMethod(name: "P4-死刑", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18578"])]
@@ -1479,6 +1474,7 @@ public class TheEpicOfAlexander
 
     #endregion
 
+    
     #region 地火
 
     [ScriptMethod(name: "P4-地火分摊范围", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18580"])]
@@ -1553,9 +1549,10 @@ public class TheEpicOfAlexander
     }
 
     #endregion
-
+    
     #endregion
 }
+
 
 #region Helpers
 
@@ -1678,7 +1675,7 @@ public static class EventExtensions
     }
 }
 
-public static class saExtensions
+public static class ScriptAccessoryExtensions
 {
     public static DrawPropertiesEdit FastDp(this ScriptAccessory sa, string name, uint owner, uint duration, float radius, bool safe = false)
     {
@@ -1745,37 +1742,22 @@ public static class saExtensions
         return sa.Data.PartyList.IndexOf(sa.Data.Me);
     }
 
-    public static IEnumerable<IPlayerCharacter> GetParty(this ScriptAccessory sa)
+    public static IEnumerable<IPlayerCharacter?> GetParty(this ScriptAccessory sa)
     {
         foreach (var pid in sa.Data.PartyList)
         {
-            yield return (IPlayerCharacter)sa.Data.Objects.SearchByEntityId(pid);
+            yield return (IPlayerCharacter?)sa.Data.Objects.SearchByEntityId(pid);
         }
     }
 
-    public static IPlayerCharacter GetMe(this ScriptAccessory sa)
+    public static IPlayerCharacter? GetMe(this ScriptAccessory sa)
     {
-        return (IPlayerCharacter)sa.Data.Objects.SearchByEntityId(sa.Data.Me);
+        return (IPlayerCharacter?)sa.Data.Objects.SearchByEntityId(sa.Data.Me);
     }
 }
 
 public static class IbcHelper
 {
-    public static IBattleChara? GetByEntityId(uint id)
-    {
-        return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
-    }
-
-    public static IGameObject? GetFirstByDataId(uint dataId)
-    {
-        return Svc.Objects.FirstOrDefault(x => x.DataId == dataId);
-    }
-
-    public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
-    {
-        return Svc.Objects.Where(x => x.DataId == dataId);
-    }
-
     public static bool HasStatus(this IBattleChara chara, uint statusId)
     {
         return chara.StatusList.Any(x => x.StatusId == statusId);

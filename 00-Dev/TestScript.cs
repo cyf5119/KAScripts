@@ -7,6 +7,8 @@ using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using System.Threading.Tasks;
+using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.DalamudServices;
 
 // using Cyf5119Script.Dev.CyfHelper;
 // using Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
@@ -49,9 +51,15 @@ public class TestScript4
     [ScriptMethod(name: "TestMethod4", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:24286"])]
     public void TestMethod4(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("/e test4", 3000);
+        accessory.Method.SendChat("/e test4");
+        // accessory.Method.TextInfo($"/e {@event.ActionId()}", 2000);
+        TTTTEST(@event, accessory);
+    }
+    
+    [ScriptMethod(name: "TTTTEST", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:99999"])]
+    public void TTTTEST(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.SendChat("/e TTTTEST");
         // accessory.Method.TextInfo($"/e {@event.ActionId()}", 2000);
     }
 }
-
-

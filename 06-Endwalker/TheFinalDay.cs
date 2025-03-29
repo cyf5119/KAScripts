@@ -10,7 +10,8 @@ using KodakkuAssist.Module.Draw.Manager;
 
 namespace Cyf5119Script.Endwalker.TheFinalDay;
 
-[ScriptType(guid: "2BEBDA4A-DA6A-4B54-B9B8-533F34B3A2EB", name: "终结之战", territorys: [997], version: "0.0.0.1", author: "Cyf5119")]
+[ScriptType(guid: "2BEBDA4A-DA6A-4B54-B9B8-533F34B3A2EB", name: "终结之战", territorys: [997], version: "0.0.0.1",
+    author: "Cyf5119")]
 public class TheFinalDay
 {
     public void Init(ScriptAccessory accessory)
@@ -18,13 +19,15 @@ public class TheFinalDay
         accessory.Method.RemoveDraw(".*");
     }
 
-    [ScriptMethod(name: "哀歌", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(26156|26242)$"])]
+    [ScriptMethod(name: "哀歌", eventType: EventTypeEnum.StartCasting,
+        eventCondition: ["ActionId:regex:^(26156|26242)$"])]
     public void Elegeia(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.TextInfo("AOE", 8300);
     }
-        
-    [ScriptMethod(name: "天体撞击", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(26158|26171)$"])]
+
+    [ScriptMethod(name: "天体撞击", eventType: EventTypeEnum.StartCasting,
+        eventCondition: ["ActionId:regex:^(26158|26171)$"])]
     public void StellarCollision(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -35,7 +38,7 @@ public class TheFinalDay
         dp.Scale = new(30);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
-    
+
     [ScriptMethod(name: "银河", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:27754"])]
     public void Galaxias(Event @event, ScriptAccessory accessory)
     {
@@ -49,8 +52,9 @@ public class TheFinalDay
         dp.Scale = new(1, 13);
         accessory.Method.SendDraw(0, DrawTypeEnum.Rect, dp);
     }
-    
-    [ScriptMethod(name: "反诘", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(26179|26180)$"])]
+
+    [ScriptMethod(name: "反诘", eventType: EventTypeEnum.StartCasting,
+        eventCondition: ["ActionId:regex:^(26179|26180)$"])]
     public void Elenchos(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -62,7 +66,7 @@ public class TheFinalDay
         dp.Scale = new(middle ? 14 : 13, 40);
         accessory.Method.SendDraw(0, middle ? DrawTypeEnum.Rect : DrawTypeEnum.Straight, dp);
     }
-    
+
     [ScriptMethod(name: "药毒", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:26187"])]
     public void Pharmakon(Event @event, ScriptAccessory accessory)
     {
@@ -75,7 +79,7 @@ public class TheFinalDay
         dp.Scale = new(6);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
-    
+
     [ScriptMethod(name: "流溢", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:26174"])]
     public void Aporrhoia(Event @event, ScriptAccessory accessory)
     {
@@ -88,7 +92,7 @@ public class TheFinalDay
         dp.Scale = new(5, 40);
         accessory.Method.SendDraw(0, DrawTypeEnum.Rect, dp);
     }
-    
+
     [ScriptMethod(name: "傲慢", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:26195"])]
     public void Hubris(Event @event, ScriptAccessory accessory)
     {
@@ -100,7 +104,7 @@ public class TheFinalDay
         dp.Scale = new(6);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
-    
+
     [ScriptMethod(name: "悲惨", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:26182"])]
     public void Misery(Event @event, ScriptAccessory accessory)
     {
@@ -115,7 +119,7 @@ public class TheFinalDay
         dp.Scale = new(12);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
-    
+
     [ScriptMethod(name: "冲撞", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:26199"])]
     public void Crash(Event @event, ScriptAccessory accessory)
     {

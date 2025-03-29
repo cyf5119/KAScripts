@@ -11,7 +11,7 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Dawntrail.TenderValley
 {
-    [ScriptType(guid: "C6AAF3DF-64BA-15C2-41F8-D24F7F4656DD", name: "荒野秘境仙人刺谷", territorys: [1203], version: "0.0.0.3", author: "Cyf5119")]
+    [ScriptType(guid: "C6AAF3DF-64BA-15C2-41F8-D24F7F4656DD", name: "荒野秘境仙人刺谷", territorys: [1203], version: "0.0.0.4", author: "Cyf5119")]
     public class TenderValley
     {
         private uint
@@ -155,6 +155,7 @@ namespace Cyf5119Script.Dawntrail.TenderValley
 
         #endregion
 
+        
         #region BOSS2
 
         [ScriptMethod(name: "老二AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:36557"])]
@@ -237,7 +238,7 @@ namespace Cyf5119Script.Dawntrail.TenderValley
         [ScriptMethod(name: "老三死刑", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:36744"])]
         public void Boss3Tankbuster(Event @event, ScriptAccessory accessory)
         {
-            // 实际死刑是一个非读条技能 大约五秒多一些判定 约作5秒了
+            // 实际死刑是一个非读条技能 五秒多一些判定 约作5秒了
             accessory.Method.TextInfo("死刑", duration: 5000);
         }
 

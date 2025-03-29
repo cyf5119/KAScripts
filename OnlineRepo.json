@@ -2,18 +2,18 @@
   {
     "Name": "亚历山大绝境战",
     "Guid": "E047803D-38D5-45B4-AF48-71C0691CDCC9",
-    "Version": "0.0.2.2",
+    "Version": "0.0.2.3",
     "Author": "Cyf5119",
     "Repo": "",
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/05-Shadowbringers/TheEpicOfAlexander.cs",
     "Note": "",
-    "UpdateInfo": "加了几个颜色设置。",
+    "UpdateInfo": "使用可达鸭提供的ObjectTable",
     "TerritoryIds": [887]
   },
   {
     "Name": "无敌提示宏",
     "Guid": "FCDCA220-DA96-48B5-909B-C1E336671D54",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Cyf5119",
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/01-General/InvulnAlert.cs"
   },
@@ -69,7 +69,7 @@
   {
     "Name": "艳翼蛇鸟歼灭战",
     "Guid": "E9ABB865-498F-4C4F-8071-8A2E9F0589F6",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Cyf5119",
     "TerritoryIds": [1195],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/WorqorLarDor.cs"
@@ -86,7 +86,7 @@
   {
     "Name": "荒野秘境仙人刺谷",
     "Guid": "C6AAF3DF-64BA-15C2-41F8-D24F7F4656DD",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Cyf5119",
     "TerritoryIds": [1203],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/TenderValley.cs"
@@ -94,7 +94,7 @@
   {
     "Name": "噩梦乐园迷途鬼区",
     "Guid": "32BC9D47-D623-507F-CDBF-E17EFEA73FA4",
-    "Version": "0.0.0.6",
+    "Version": "0.0.0.7",
     "Author": "Cyf5119",
     "TerritoryIds": [1204],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/TheStrayboroughDeadwalk.cs",
@@ -103,16 +103,15 @@
   {
     "Name": "M1n",
     "Guid": "28EEE8DC-DA6A-3F91-0D0C-7AA1BFB49AB0",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Cyf5119",
     "TerritoryIds": [1225],
-    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M1n.cs",
-    "UpdateInfo": "修改休眠逻辑。"
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M1n.cs"
   },
   {
     "Name": "M2n",
     "Guid": "4FD21978-B76C-4BF7-A3F5-D0490BB51915",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Cyf5119",
     "TerritoryIds": [1227],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M2n.cs"
@@ -120,7 +119,7 @@
   {
     "Name": "M3n",
     "Guid": "AA6A8D8A-4462-41A2-B500-90515DE6534A",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Cyf5119",
     "TerritoryIds": [1229],
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M3n.cs"
@@ -128,11 +127,10 @@
   {
     "Name": "M4n",
     "Guid": "F4A95B34-AE13-40E4-9106-78D607BCFD57",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.3",
     "Author": "Cyf5119",
     "TerritoryIds": [1231],
-    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M4n.cs",
-    "UpdateInfo": "优化了多重分身释放半场刀时的绘制。"
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/07-Dawntrail/M4n.cs"
   },
   
   {

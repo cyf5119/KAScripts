@@ -15,13 +15,13 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Dawntrail.M4n;
 
-[ScriptType(guid: "F4A95B34-AE13-40E4-9106-78D607BCFD57", name: "M4n", territorys: [1231], version: "0.0.0.2", author: "Cyf5119")]
+[ScriptType(guid: "F4A95B34-AE13-40E4-9106-78D607BCFD57", name: "M4n", territorys: [1231], version: "0.0.0.3", author: "Cyf5119")]
 public class M4n
 {
     private List<bool> IsFront = [];
     private int MaxCannonTimes = 0;
     private int SparkCount = 0;
-    
+
     public void Init(ScriptAccessory accessory)
     {
         IsFront = [];
@@ -73,7 +73,8 @@ public class M4n
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "侧方电火花", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(3756[4567])$"])]
+    [ScriptMethod(name: "侧方电火花", eventType: EventTypeEnum.StartCasting,
+        eventCondition: ["ActionId:regex:^(3756[4567])$"])]
     public void SidewiseSpark(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();

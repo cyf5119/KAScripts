@@ -14,13 +14,13 @@ using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Dawntrail.M2n;
 
-[ScriptType(guid: "4FD21978-B76C-4BF7-A3F5-D0490BB51915", name: "M2n", territorys: [1227], version: "0.0.0.1", author: "Cyf5119")]
+[ScriptType(guid: "4FD21978-B76C-4BF7-A3F5-D0490BB51915", name: "M2n", territorys: [1227], version: "0.0.0.2", author: "Cyf5119")]
 public class M2n
 {
     public void Init(ScriptAccessory accessory)
     {
     }
-    
+
     [ScriptMethod(name: "AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(37220|37234|37243)$"])]
     public void AOE(Event @event, ScriptAccessory accessory)
     {
@@ -33,17 +33,17 @@ public class M2n
     {
         accessory.Method.TextInfo("双T扇形死刑", duration: 5000);
         var dp = accessory.Data.GetDefaultDrawProperties();
-        var boss = IbcHelper.GetByDataId(0x422A).FirstOrDefault();
+        var boss = accessory.Data.Objects.FirstOrDefault(x => x.DataId == 0x422A);
         dp.Name = "死刑";
         dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = boss.EntityId;
+        dp.Owner = boss?.EntityId ?? 0;
         dp.TargetObject = @event.TargetId();
         dp.DestoryAt = 5000;
         dp.Radian = float.Pi / 180 * 30;
         dp.Scale = new Vector2(40);
         accessory.Method.SendDraw(0, DrawTypeEnum.Fan, dp);
     }
-    
+
     [ScriptMethod(name: "分摊", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(37232|39821)$"])]
     public void Stack(Event @event, ScriptAccessory accessory)
     {
@@ -69,7 +69,7 @@ public class M2n
         dp.Radian = float.Pi * 2;
         accessory.Method.SendDraw(0, DrawTypeEnum.Donut, dp);
     }
-    
+
     [ScriptMethod(name: "直线", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(3973[79])$"])]
     public void HoneyBeeline(Event @event, ScriptAccessory accessory)
     {
@@ -81,7 +81,7 @@ public class M2n
         dp.Scale = new Vector2(14, 60);
         accessory.Method.SendDraw(0, DrawTypeEnum.Straight, dp);
     }
-    
+
     [ScriptMethod(name: "扇形", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:37235"])]
     public void BlowKiss(Event @event, ScriptAccessory accessory)
     {
@@ -94,7 +94,7 @@ public class M2n
         dp.Radian = float.Pi / 180 * 120;
         accessory.Method.SendDraw(0, DrawTypeEnum.Fan, dp);
     }
-    
+
     [ScriptMethod(name: "毒液", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:37230"])]
     public void Splinter(Event @event, ScriptAccessory accessory)
     {
@@ -106,7 +106,7 @@ public class M2n
         dp.Scale = new Vector2(8);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
-    
+
     [ScriptMethod(name: "冲锋", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(3952[56])$"])]
     public void BlindingLove(Event @event, ScriptAccessory accessory)
     {
@@ -152,93 +152,4 @@ public static class EventExtensions
     {
         return ParseHexId(@event["TargetId"], out var id) ? id : 0;
     }
-
-    public static Vector3 SourcePosition(this Event @event)
-    {
-        return JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
-    }
-
-    public static Vector3 TargetPosition(this Event @event)
-    {
-        return JsonConvert.DeserializeObject<Vector3>(@event["TargetPosition"]);
-    }
-
-    public static Vector3 EffectPosition(this Event @event)
-    {
-        return JsonConvert.DeserializeObject<Vector3>(@event["EffectPosition"]);
-    }
-
-    public static float SourceRotation(this Event @event)
-    {
-        return JsonConvert.DeserializeObject<float>(@event["SourceRotation"]);
-    }
-
-    public static float TargetRotation(this Event @event)
-    {
-        return JsonConvert.DeserializeObject<float>(@event["TargetRotation"]);
-    }
-
-    public static string SourceName(this Event @event)
-    {
-        return @event["SourceName"];
-    }
-
-    public static string TargetName(this Event @event)
-    {
-        return @event["TargetName"];
-    }
-
-    public static uint DurationMilliseconds(this Event @event)
-    {
-        return JsonConvert.DeserializeObject<uint>(@event["DurationMilliseconds"]);
-    }
-
-    public static uint Index(this Event @event)
-    {
-        return ParseHexId(@event["Index"], out var id) ? id : 0;
-    }
-
-    public static uint State(this Event @event)
-    {
-        return ParseHexId(@event["State"], out var id) ? id : 0;
-    }
-
-    public static uint DirectorId(this Event @event)
-    {
-        return ParseHexId(@event["DirectorId"], out var id) ? id : 0;
-    }
-
-    public static uint StatusId(this Event @event)
-    {
-        return JsonConvert.DeserializeObject<uint>(@event["StatusID"]);
-    }
-
-    public static uint StackCount(this Event @event)
-    {
-        return JsonConvert.DeserializeObject<uint>(@event["StackCount"]);
-    }
-
-    public static uint Param(this Event @event)
-    {
-        return JsonConvert.DeserializeObject<uint>(@event["Param"]);
-    }
-}
-
-public static class IbcHelper
-{
-    public static IBattleChara? GetById(uint id)
-    {
-        return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
-    }
-
-    public static IBattleChara? GetMe()
-    {
-        return Svc.ClientState.LocalPlayer;
-    }
-
-    public static IEnumerable<IGameObject> GetByDataId(uint dataId)
-    {
-        return Svc.Objects.Where(x => x.DataId == dataId);
-    }
-    
 }

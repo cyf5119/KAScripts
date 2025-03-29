@@ -63,7 +63,8 @@ public class Alexandria
         InterferonList = []; // 利用分摊清空异常状态下的列表
     }
 
-    [ScriptMethod(name: "老一扇形", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(363(79|81))$"])]
+    [ScriptMethod(name: "老一扇形", eventType: EventTypeEnum.StartCasting,
+        eventCondition: ["ActionId:regex:^(363(79|81))$"])]
     public void Boss1Fan(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -79,7 +80,8 @@ public class Alexandria
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
 
-    [ScriptMethod(name: "老一十字与月环首次", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^(1675[67])$"])]
+    [ScriptMethod(name: "老一十字与月环首次", eventType: EventTypeEnum.AddCombatant,
+        eventCondition: ["DataId:regex:^(1675[67])$"])]
     public void Boss1CrossAndDonut(Event @event, ScriptAccessory accessory)
     {
         if (!ParseObjectId(@event["SourceId"], out var sid)) return;
@@ -90,15 +92,17 @@ public class Alexandria
             if (InterferonList.Count > 0)
                 foreach (var list in InterferonList)
                 {
-                    if(list[0] == sid) return;
+                    if (list[0] == sid) return;
                 }
+
             InterferonList.Add([sid, did]);
             if (InterferonList.Count < 5) return;
             DrawCrossAndDonut(accessory);
         }
     }
 
-    [ScriptMethod(name: "老一十字与月环后续", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(3638[23])$"])]
+    [ScriptMethod(name: "老一十字与月环后续", eventType: EventTypeEnum.StartCasting,
+        eventCondition: ["ActionId:regex:^(3638[23])$"])]
     public async void Boss1CrossAndDonutEffect(Event @event, ScriptAccessory accessory)
     {
         await Task.Delay(1000);
@@ -139,7 +143,8 @@ public class Alexandria
 
     #region BOSS2
 
-    [ScriptMethod(name: "老二AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(363(38|23))$"])]
+    [ScriptMethod(name: "老二AOE", eventType: EventTypeEnum.StartCasting,
+        eventCondition: ["ActionId:regex:^(363(38|23))$"])]
     public void Boss2Aoe(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.TextInfo("AOE", duration: 5000);
@@ -258,7 +263,8 @@ public class Alexandria
         // accessory.Method.TextInfo("分摊", duration: 5100);
     }
 
-    [ScriptMethod(name: "老三刀", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(39(007|238|249))$"])]
+    [ScriptMethod(name: "老三刀", eventType: EventTypeEnum.StartCasting,
+        eventCondition: ["ActionId:regex:^(39(007|238|249))$"])]
     public void Boss3Fan(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();

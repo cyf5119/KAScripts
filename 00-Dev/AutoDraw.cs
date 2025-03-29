@@ -14,7 +14,7 @@ using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 
 namespace Cyf5119Script.Dev.AutoDraw
 {
@@ -39,24 +39,24 @@ namespace Cyf5119Script.Dev.AutoDraw
             var spos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
             var tpos = JsonConvert.DeserializeObject<Vector3>(@event["TargetPosition"]);
 
-            var action = Svc.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.Action>().GetRow(aid);
+            var action = Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Action>().GetRow(aid);
             var castType = action.CastType;
             float range = action.EffectRange;
             float width = action.XAxisModifier;
             // TODO USE OMEN TO HELP ADJUST THE SHAPE
             // var omen = action.Omen;
-            
+
             dp.Name = $"AutoDraw {sid:X}:{aid}";
-            
+
             if (castType == 1) return; // 1 is single target cast
-            
-            var source = GetObjById(sid);
+
+            var source = accessory.Data.Objects.SearchById(sid);
             if (source == null) return;
-            var target = GetObjById(tid);
-            
+            var target = accessory.Data.Objects.SearchById(tid);
+
             if (castType >= 3 && castType <= 5) // deal fan = 3, laser = 4 , around = 5 with source radius extra
                 range += source.HitboxRadius;
-            
+
             dp.Color = new(0f, 0f, 0f, 0f);
             // TODO here should add something for special actions
             if (IsEnemy(Svc.ClientState.LocalPlayer, (ICharacter?)source))
@@ -65,11 +65,11 @@ namespace Cyf5119Script.Dev.AutoDraw
                 dp.Color = accessory.Data.DefaultSafeColor;
             else
                 return;
-            
+
             // TODO here should add something for special actions
             dp.Delay = 0;
             dp.DestoryAt = dura;
-            
+
             if (castType == 8) // rect to target
             {
                 if (source is null || target is null)
@@ -77,16 +77,16 @@ namespace Cyf5119Script.Dev.AutoDraw
                 dp.TargetObject = tid;
                 dp.ScaleMode = ScaleMode.YByDistance;
             }
-            
+
             // TODO here should add something for special actions
             var shape = GetShapeDefault(castType);
             if (shape is null) return;
             if (shape == DrawTypeEnum.Donut)
             {
-                dp.InnerScale = new (range / 2);
+                dp.InnerScale = new(range / 2);
                 dp.Radian = float.Pi * 2;
             }
-            
+
             dp.Scale = new Vector2(width != 0 ? width : range, range);
 
             if (shape == DrawTypeEnum.Circle || shape == DrawTypeEnum.Donut)
@@ -114,7 +114,7 @@ namespace Cyf5119Script.Dev.AutoDraw
             accessory.Method.RemoveDraw($"AutoDraw {sid:X}:{aid}");
             accessory.Log.Debug($"CancelAuto {sid:X}:{aid}");
         }
-        
+
         private static bool ParseObjectId(string? idStr, out uint id)
         {
             id = 0;
@@ -136,99 +136,92 @@ namespace Cyf5119Script.Dev.AutoDraw
             var shapeDict = new Dictionary<byte, DrawTypeEnum>
             {
                 // 1 single target
-                { 2, DrawTypeEnum.Circle }, // aoe circle
-                { 3, DrawTypeEnum.Fan }, // aoe cone / fan
-                { 4, DrawTypeEnum.Rect }, // aoe rect
-                { 5, DrawTypeEnum.Circle }, // enemy pbaoe circle?
-                { 6, DrawTypeEnum.Circle }, // ??? 6 cone?? / circle ?
-                { 7, DrawTypeEnum.Circle }, // ground circle
-                { 8, DrawTypeEnum.Rect }, // charge rect / rect to target
-                { 10, DrawTypeEnum.Donut }, // enemy aoe donut
+                { 2, DrawTypeEnum.Circle },    // aoe circle
+                { 3, DrawTypeEnum.Fan },       // aoe cone / fan
+                { 4, DrawTypeEnum.Rect },      // aoe rect
+                { 5, DrawTypeEnum.Circle },    // enemy pbaoe circle?
+                { 6, DrawTypeEnum.Circle },    // ??? 6 cone?? / circle ?
+                { 7, DrawTypeEnum.Circle },    // ground circle
+                { 8, DrawTypeEnum.Rect },      // charge rect / rect to target
+                { 10, DrawTypeEnum.Donut },    // enemy aoe donut
                 { 11, DrawTypeEnum.Straight }, // enemy aoe cross??? / TODO cross
-                { 12, DrawTypeEnum.Rect }, // enemy aoe rect 
-                { 13, DrawTypeEnum.Fan }, // enemy aoe cone / fan
+                { 12, DrawTypeEnum.Rect },     // enemy aoe rect 
+                { 13, DrawTypeEnum.Fan },      // enemy aoe cone / fan
                 // {14, DrawTypeEnum.triangle} // 三角形！
             };
             if (shapeDict.ContainsKey(castType))
                 return shapeDict[castType];
             return null;
         }
-        
+
         private static bool ReadUnknown(Battalion? b, int i)
         {
             if (b is null) return false;
             switch (i)
             {
                 case 0:
-                    return b.Unknown0;
+                    return b.Value.Unknown0;
                 case 1:
-                    return b.Unknown1;
+                    return b.Value.Unknown1;
                 case 2:
-                    return b.Unknown2;
+                    return b.Value.Unknown2;
                 case 3:
-                    return b.Unknown3;
+                    return b.Value.Unknown3;
                 case 4:
-                    return b.Unknown4;
+                    return b.Value.Unknown4;
                 case 5:
-                    return b.Unknown5;
+                    return b.Value.Unknown5;
                 case 6:
-                    return b.Unknown6;
+                    return b.Value.Unknown6;
                 case 7:
-                    return b.Unknown7;
+                    return b.Value.Unknown7;
                 case 8:
-                    return b.Unknown8;
+                    return b.Value.Unknown8;
                 case 9:
-                    return b.Unknown9;
+                    return b.Value.Unknown9;
                 case 10:
-                    return b.Unknown10;
+                    return b.Value.Unknown10;
                 case 11:
-                    return b.Unknown11;
+                    return b.Value.Unknown11;
                 case 12:
-                    return b.Unknown12;
+                    return b.Value.Unknown12;
                 case 13:
-                    return b.Unknown13;
+                    return b.Value.Unknown13;
                 case 14:
-                    return b.Unknown14;
+                    return b.Value.Unknown14;
                 default:
                     return false;
             }
         }
-        
+
         private static unsafe byte GetBattalionKey(ICharacter character, uint mode)
         {
             if (mode == 1 && character.ObjectKind == ObjectKind.Player)
                 return 0;
             return character.Struct()->Battalion;
         }
-        
+
         private static bool IsEnemy(ICharacter? a1, ICharacter? a2)
         {
             if (a1 is null || a2 is null) return true;
             byte battalionMode;
             try
             {
-                battalionMode = Svc.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.TerritoryType>().GetRow(Svc.ClientState.TerritoryType).BattalionMode;
+                battalionMode = Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.TerritoryType>()
+                    .GetRow(Svc.ClientState.TerritoryType).BattalionMode;
             }
-            catch(KeyNotFoundException)
+            catch (KeyNotFoundException)
             {
                 return false;
             }
 
             if (battalionMode == 0)
                 return false;
-            var row = Svc.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets2.Battalion>().GetRow(GetBattalionKey(a1, battalionMode));
+            var row = Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Battalion>()
+                .GetRow(GetBattalionKey(a1, battalionMode));
             return ReadUnknown(row, GetBattalionKey(a2, battalionMode));
         }
-        
-        private IGameObject? GetObjById(ulong? objid)
-        {
-            if (objid is null)
-                return null;
-            return Svc.Objects.SearchById((ulong)objid);
-        }
 
-        
-        
         private class Shape
         {
             private DrawTypeEnum DrawType;
@@ -252,7 +245,7 @@ namespace Cyf5119Script.Dev.AutoDraw
                 else Radian = float.Pi / 180 * degree;
                 return this;
             }
-            
+
             public Shape Fan(float radius, float? degree)
             {
                 DrawType = DrawTypeEnum.Fan;
@@ -261,7 +254,7 @@ namespace Cyf5119Script.Dev.AutoDraw
                 else Radian = float.Pi / 180 * degree;
                 return this;
             }
-            
+
             public Shape Rect(float length, float width, uint arg = 0)
             {
                 switch (arg)
@@ -278,13 +271,12 @@ namespace Cyf5119Script.Dev.AutoDraw
                         DrawType = DrawTypeEnum.Straight;
                         Scale = new Vector2(width, length * 2);
                         break;
-                    
                 }
 
                 return this;
             }
         }
-        
+
         private class PresetData
         {
             public Shape? _shape;
@@ -299,13 +291,10 @@ namespace Cyf5119Script.Dev.AutoDraw
             }
         }
 
-        private Dictionary<uint, PresetData> 
+        private Dictionary<uint, PresetData>
             presets = new()
-        {
-            [11111] = new PresetData(new Shape().Circle(5f), 5f, new Vector4()),
-        };
-
-
+            {
+                [11111] = new PresetData(new Shape().Circle(5f), 5f, new Vector4()),
+            };
     }
-
 }
