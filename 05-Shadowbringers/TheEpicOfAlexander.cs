@@ -15,7 +15,7 @@ using KodakkuAssist.Module.Draw.Manager;
 
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
-[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战", territorys: [887], version: "0.0.2.4", author: "Cyf5119", note: Note, updateInfo: UpdateInfo)]
+[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战", territorys: [887], version: "0.0.2.5", author: "Cyf5119", note: Note, updateInfo: UpdateInfo)]
 public class TheEpicOfAlexander
 {
     private const string Note = "有问题来DC反馈。\n画图基于设置的小队职能进行绘制，请确保设置准确无误。\n/e KASCLEAR 清理残余画图";
@@ -986,7 +986,7 @@ public class TheEpicOfAlexander
     [ScriptMethod(name: "P3-二运指路一阶段", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^(00(4F|5[0123456]))$"])]
     public void LimitCutP3Guide1(Event evt, ScriptAccessory sa)
     {
-        if(sa.Data.Objects.Any(x => x is IBattleChara y && y.CastActionId == 18534)) return;
+        if (!sa.Data.Objects.Any(x => x is IBattleChara y && y.CastActionId == 18534)) return;
         if (evt.TargetId() != sa.Data.Me) return;
         var myIdx = (int)evt.IconId() - 79;
         if (myIdx < 0 || myIdx > 7) return;
