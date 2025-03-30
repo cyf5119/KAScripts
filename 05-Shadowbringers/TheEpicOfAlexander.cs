@@ -4,20 +4,18 @@ using System.Numerics;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Dalamud.Game.ClientState.Objects.SubKinds;
-using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using ECommons;
+using KodakkuAssist.Data;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Module.Draw.Manager;
-using KodakkuAssist.Module.GameOperate;
 
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
-[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战", territorys: [887], version: "0.0.2.3", author: "Cyf5119", note: Note, updateInfo: UpdateInfo)]
+[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战", territorys: [887], version: "0.0.2.4", author: "Cyf5119", note: Note, updateInfo: UpdateInfo)]
 public class TheEpicOfAlexander
 {
     private const string Note = "有问题来DC反馈。\n画图基于设置的小队职能进行绘制，请确保设置准确无误。\n/e KASCLEAR 清理残余画图";
@@ -1742,11 +1740,12 @@ public static class ScriptAccessoryExtensions
         return sa.Data.PartyList.IndexOf(sa.Data.Me);
     }
 
-    public static IEnumerable<IPlayerCharacter?> GetParty(this ScriptAccessory sa)
+    public static IEnumerable<IPlayerCharacter> GetParty(this ScriptAccessory sa)
     {
         foreach (var pid in sa.Data.PartyList)
         {
-            yield return (IPlayerCharacter?)sa.Data.Objects.SearchByEntityId(pid);
+            var obj = sa.Data.Objects.SearchByEntityId(pid);
+            if (obj is IPlayerCharacter character) yield return character;
         }
     }
 
