@@ -2,16 +2,13 @@
 using System.Linq;
 using System.Numerics;
 using Newtonsoft.Json;
-using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
-using KodakkuAssist.Module.Draw.Manager;
 
 namespace Cyf5119Script.Endwalker.TheFinalDay;
 
-[ScriptType(guid: "2BEBDA4A-DA6A-4B54-B9B8-533F34B3A2EB", name: "终结之战", territorys: [997], version: "0.0.0.1",
-    author: "Cyf5119")]
+[ScriptType(guid: "2BEBDA4A-DA6A-4B54-B9B8-533F34B3A2EB", name: "终结之战", territorys: [997], version: "0.0.0.2", author: "Cyf5119")]
 public class TheFinalDay
 {
     public void Init(ScriptAccessory accessory)
@@ -19,15 +16,13 @@ public class TheFinalDay
         accessory.Method.RemoveDraw(".*");
     }
 
-    [ScriptMethod(name: "哀歌", eventType: EventTypeEnum.StartCasting,
-        eventCondition: ["ActionId:regex:^(26156|26242)$"])]
+    [ScriptMethod(name: "哀歌", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(26156|26242)$"])]
     public void Elegeia(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.TextInfo("AOE", 8300);
     }
 
-    [ScriptMethod(name: "天体撞击", eventType: EventTypeEnum.StartCasting,
-        eventCondition: ["ActionId:regex:^(26158|26171)$"])]
+    [ScriptMethod(name: "天体撞击", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(26158|26171)$"])]
     public void StellarCollision(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -53,8 +48,7 @@ public class TheFinalDay
         accessory.Method.SendDraw(0, DrawTypeEnum.Rect, dp);
     }
 
-    [ScriptMethod(name: "反诘", eventType: EventTypeEnum.StartCasting,
-        eventCondition: ["ActionId:regex:^(26179|26180)$"])]
+    [ScriptMethod(name: "反诘", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(26179|26180)$"])]
     public void Elenchos(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();

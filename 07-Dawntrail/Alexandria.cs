@@ -5,15 +5,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Dalamud.Utility.Numerics;
-using ECommons;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Dawntrail.Alexandria;
 
-[ScriptType(guid: "243443E4-FC8E-3EA6-9A75-FD2A4B6990FF", name: "忆中金曦亚历山德里亚", territorys: [1199], version: "0.0.0.3", author: "Cyf5119")]
+[ScriptType(guid: "243443E4-FC8E-3EA6-9A75-FD2A4B6990FF", name: "忆中金曦亚历山德里亚", territorys: [1199], version: "0.0.0.4", author: "Cyf5119")]
 public class Alexandria
 {
     private List<List<uint>> InterferonList = [];

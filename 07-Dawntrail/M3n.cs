@@ -2,19 +2,14 @@
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Threading;
-using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
-using Dalamud.Utility.Numerics;
-using ECommons;
-using ECommons.DalamudServices;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Dawntrail.M3n;
 
-[ScriptType(guid: "AA6A8D8A-4462-41A2-B500-90515DE6534A", name: "M3n", territorys: [1229], version: "0.0.0.2", author: "Cyf5119")]
+[ScriptType(guid: "AA6A8D8A-4462-41A2-B500-90515DE6534A", name: "M3n", territorys: [1229], version: "0.0.0.3", author: "Cyf5119")]
 public class M3n
 {
     public void Init(ScriptAccessory accessory)

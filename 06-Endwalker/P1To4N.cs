@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Numerics;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
-using Dalamud.Utility.Numerics;
-using ECommons;
 using ECommons.DalamudServices;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
@@ -16,8 +12,7 @@ using KodakkuAssist.Module.Draw.Manager;
 
 namespace Cyf5119Script.Endwalker.P1To4N;
 
-[ScriptType(guid: "AD2A9D42-E040-442E-A8F2-86F7D13768BD", name: "P1N-P4N捆绑包", territorys: [1002, 1004, 1006, 1008],
-    version: "0.0.0.1", author: "Cyf5119", note: "包含P1N,P2N,P3N,P4N")]
+[ScriptType(guid: "AD2A9D42-E040-442E-A8F2-86F7D13768BD", name: "P1N-P4N捆绑包", territorys: [1002, 1004, 1006, 1008], version: "0.0.0.2", author: "Cyf5119", note: "包含P1N,P2N,P3N,P4N")]
 public class P1To4N
 {
     // private uint _status = 0;

@@ -2,16 +2,13 @@
 using System.Linq;
 using System.Numerics;
 using Newtonsoft.Json;
-using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
-using KodakkuAssist.Module.Draw.Manager;
 
 namespace Cyf5119Script.Endwalker.StormsCrown;
 
-[ScriptType(guid: "776A7DFB-F8C3-4ECC-BFB7-3631D083A117", name: "巴尔巴莉希娅歼灭战", territorys: [1071], version: "0.0.0.1",
-    author: "Cyf5119")]
+[ScriptType(guid: "776A7DFB-F8C3-4ECC-BFB7-3631D083A117", name: "巴尔巴莉希娅歼灭战", territorys: [1071], version: "0.0.0.2", author: "Cyf5119")]
 public class StormsCrown
 {
     public void Init(ScriptAccessory accessory)
@@ -38,8 +35,7 @@ public class StormsCrown
         accessory.Method.TextInfo("分摊死刑", 5000);
     }
 
-    [ScriptMethod(name: "野蛮剃-一", eventType: EventTypeEnum.StartCasting,
-        eventCondition: ["ActionId:regex:^(30138|30144)$"])]
+    [ScriptMethod(name: "野蛮剃-一", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(30138|30144)$"])]
     public void SavageBarbery1(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -61,8 +57,7 @@ public class StormsCrown
         }
     }
 
-    [ScriptMethod(name: "野蛮剃-二", eventType: EventTypeEnum.StartCasting,
-        eventCondition: ["ActionId:regex:^(30139|30145)$"])]
+    [ScriptMethod(name: "野蛮剃-二", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(30139|30145)$"])]
     public void SavageBarbery2(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();

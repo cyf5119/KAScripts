@@ -1,21 +1,12 @@
 ﻿using System;
 using System.Linq;
-using System.Numerics;
-using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
-using Dalamud.Game.ClientState.Objects.Types;
-using Newtonsoft.Json;
-using Dalamud.Utility.Numerics;
-using ECommons;
-using ECommons.DalamudServices;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
-using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.General.InvulnAlert;
 
-[ScriptType(guid: "FCDCA220-DA96-48B5-909B-C1E336671D54", name: "无敌提示宏", territorys: [], version: "0.0.0.3", author: "Cyf5119", note: "自身无敌倒计时提示。")]
+[ScriptType(guid: "FCDCA220-DA96-48B5-909B-C1E336671D54", name: "无敌提示宏", territorys: [], version: "0.0.0.4", author: "Cyf5119", note: "自身无敌倒计时提示。")]
 public class InvulnAlert
 {
     [UserSetting("频道")] public string channel { get; set; } = "e";

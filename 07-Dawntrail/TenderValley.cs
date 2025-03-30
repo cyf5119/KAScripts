@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Numerics;
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using Dalamud.Utility.Numerics;
-using ECommons;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Dawntrail.TenderValley
 {
-    [ScriptType(guid: "C6AAF3DF-64BA-15C2-41F8-D24F7F4656DD", name: "荒野秘境仙人刺谷", territorys: [1203], version: "0.0.0.4", author: "Cyf5119")]
+    [ScriptType(guid: "C6AAF3DF-64BA-15C2-41F8-D24F7F4656DD", name: "荒野秘境仙人刺谷", territorys: [1203], version: "0.0.0.5", author: "Cyf5119")]
     public class TenderValley
     {
         private uint

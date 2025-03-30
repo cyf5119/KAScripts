@@ -4,10 +4,8 @@ using System.Numerics;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
-using Dalamud.Utility.Numerics;
-using ECommons;
+using KodakkuAssist.Data;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
@@ -15,7 +13,7 @@ using KodakkuAssist.Module.Draw.Manager;
 
 namespace Cyf5119Scripts.Endwalker.TheAetherfont;
 
-[ScriptType(guid: "554C2F0D-3E58-14B1-237A-2CA662AC229E", name: "间歇灵泉哈姆岛", territorys: [1126], version: "0.0.0.1", author: "Cyf5119")]
+[ScriptType(guid: "554C2F0D-3E58-14B1-237A-2CA662AC229E", name: "间歇灵泉哈姆岛", territorys: [1126], version: "0.0.0.2", author: "Cyf5119")]
 public class TheAetherfont
 {
     public void Init(ScriptAccessory sa)
