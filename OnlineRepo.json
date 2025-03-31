@@ -59,6 +59,14 @@
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/06-Endwalker/StormsCrown.cs"
   },
   {
+    "Name": "阿修罗歼灭战",
+    "Guid": "0F38EA83-3D3A-AF4E-8908-56655F76014E",
+    "Version": "0.0.0.1",
+    "Author": "Cyf5119",
+    "TerritoryIds": [1136],
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/06-Endwalker/TheGildedAraya.cs"
+  },
+  {
     "Name": "P1N-P4N捆绑包",
     "Guid": "AD2A9D42-E040-442E-A8F2-86F7D13768BD",
     "Version": "0.0.0.2",
