@@ -43,6 +43,14 @@
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/06-Endwalker/TheAetherfont.cs"
   },
   {
+    "Name": "海德林歼灭战",
+    "Guid": "EB83FE40-4DDC-42C8-B248-CBFDF9D0E2C1",
+    "Version": "0.0.0.1",
+    "Author": "Cyf5119",
+    "TerritoryIds": [995],
+    "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/06-Endwalker/TheMothercrystal.cs"
+  },
+  {
     "Name": "终结之战",
     "Guid": "2BEBDA4A-DA6A-4B54-B9B8-533F34B3A2EB",
     "Version": "0.0.0.2",
