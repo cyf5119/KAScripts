@@ -2,12 +2,12 @@
   {
     "Name": "亚历山大绝境战",
     "Guid": "E047803D-38D5-45B4-AF48-71C0691CDCC9",
-    "Version": "0.0.2.5",
+    "Version": "0.0.2.6",
     "Author": "Cyf5119",
     "Repo": "",
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/05-Shadowbringers/TheEpicOfAlexander.cs",
     "Note": "",
-    "UpdateInfo": "使用可达鸭提供的ObjectTable",
+    "UpdateInfo": "加了个P2初始站位。",
     "TerritoryIds": [887]
   },
   {

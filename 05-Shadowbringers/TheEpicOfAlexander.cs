@@ -15,11 +15,11 @@ using KodakkuAssist.Module.Draw.Manager;
 
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
-[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战", territorys: [887], version: "0.0.2.5", author: "Cyf5119", note: Note, updateInfo: UpdateInfo)]
+[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战", territorys: [887], version: "0.0.2.6", author: "Cyf5119", note: Note, updateInfo: UpdateInfo)]
 public class TheEpicOfAlexander
 {
     private const string Note = "有问题来DC反馈。\n画图基于设置的小队职能进行绘制，请确保设置准确无误。\n/e KASCLEAR 清理残余画图";
-    private const string UpdateInfo = "有问题来DC反馈。\n使用可达鸭提供的ObjectTable";
+    private const string UpdateInfo = "有问题来DC反馈。\n加了个P2初始站位。";
     
     #region 用户设置
 
@@ -207,6 +207,7 @@ public class TheEpicOfAlexander
 
     #endregion
 
+    
     #region P1
 
     private uint _p1LiquidFluidTimes = 0;
@@ -531,6 +532,8 @@ public class TheEpicOfAlexander
 
     #region 鹰式破坏炮
 
+    private static readonly List<int> P2StartDir = [4, 0, 6, 2, 3, 7, 5, 1];
+
     [ScriptMethod(name: "P1.5-地火", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:18480", "TargetIndex:1"])]
     public void HawkBlaster(Event evt, ScriptAccessory sa)
     {
@@ -549,7 +552,12 @@ public class TheEpicOfAlexander
             }
 
             if (_p1HawkBlasterTimes > 17)
+            {
                 _p1HawkBlasterTimes = 0;
+                var wPos = new Vector3(0, 0, 3.5f).V3YRotate(P2StartDir[sa.MyIndex()] * 45) + Center;
+                var dp = sa.WaypointDp(wPos, 21500, 3000);
+                sa.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+            }
         }
     }
 
