@@ -15,11 +15,11 @@ using KodakkuAssist.Module.Draw.Manager;
 
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
-[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战", territorys: [887], version: "0.0.2.6", author: "Cyf5119", note: Note, updateInfo: UpdateInfo)]
+[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战", territorys: [887], version: "0.0.2.7", author: "Cyf5119", note: Note, updateInfo: UpdateInfo)]
 public class TheEpicOfAlexander
 {
     private const string Note = "有问题来DC反馈。\n画图基于设置的小队职能进行绘制，请确保设置准确无误。\n/e KASCLEAR 清理残余画图";
-    private const string UpdateInfo = "有问题来DC反馈。\n加了个P2初始站位。";
+    private const string UpdateInfo = "有问题来DC反馈。\n";
     
     #region 用户设置
 
@@ -921,6 +921,33 @@ public class TheEpicOfAlexander
     
     #region 一运
 
+    /*
+     * 28.062 读条时空潜行阵列
+     * 35.184 亚历山大消失
+     * 37.332 亚历山大出现
+     * 53.167 结晶生成
+     */
+
+    [ScriptMethod(name: "P3-一运放结晶提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18543"])]
+    public void JudgmentCrystalTips(Event evt, ScriptAccessory sa)
+    {
+        var dp = sa.FastDp("一运真心提示", Center, 15000, 2);
+        dp.Delay = 9300;
+        dp.Color = new Vector4(.2f, 1, 1, 1);
+        dp.TargetObject = evt.SourceId();
+        dp.ScaleMode = ScaleMode.YByDistance;
+        dp.Rotation = float.Pi;
+        sa.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+
+        // 暂不可行
+        // dp.Scale = new Vector2(5);
+        // dp.Color = sa.Data.DefaultSafeColor.WithW(5);
+        // dp.Offset = new Vector3(5.5f, 0, 0);
+        // sa.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Line, dp);
+        // dp.Offset = new Vector3(-5.5f, 0, 0);
+        // sa.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Line, dp);
+    }
+    
     [ScriptMethod(name: "P3-一运正义喷火", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18523"])]
     public void PlayFlareThrower(Event evt, ScriptAccessory sa) => FlareThrower(sa, 4600, 15500, 3);
     // 18527 审判结晶
