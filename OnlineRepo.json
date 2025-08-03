@@ -2,12 +2,12 @@
   {
     "Name": "亚历山大绝境战",
     "Guid": "E047803D-38D5-45B4-AF48-71C0691CDCC9",
-    "Version": "0.0.2.7",
+    "Version": "0.0.2.8",
     "Author": "Cyf5119",
     "Repo": "",
     "DownloadUrl": "https://raw.githubusercontent.com/cyf5119/KAScripts/main/05-Shadowbringers/TheEpicOfAlexander.cs",
-    "Note": "",
-    "UpdateInfo": "",
+    "Note": "有问题来DC反馈。\n画图基于设置的小队职能进行绘制，请确保设置准确无误。\n/e KASCLEAR 清理残余画图",
+    "UpdateInfo": "有问题来DC反馈。\n更新水雷指路，默认三雷ST",
     "TerritoryIds": [887]
   },
   {

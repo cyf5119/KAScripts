@@ -15,16 +15,16 @@ using KodakkuAssist.Module.Draw.Manager;
 
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
-[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战", territorys: [887], version: "0.0.2.7", author: "Cyf5119", note: Note, updateInfo: UpdateInfo)]
+[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战", territorys: [887], version: "0.0.2.8", author: "Cyf5119", note: Note, updateInfo: UpdateInfo)]
 public class TheEpicOfAlexander
 {
     private const string Note = "有问题来DC反馈。\n画图基于设置的小队职能进行绘制，请确保设置准确无误。\n/e KASCLEAR 清理残余画图";
-    private const string UpdateInfo = "有问题来DC反馈。\n";
+    private const string UpdateInfo = "有问题来DC反馈。\n更新水雷指路，默认三雷ST";
     
     #region 用户设置
 
     [UserSetting("P2仅显示自己的传毒提示")] public static bool P2RotsSelfOnly { get; set; } = false;
-
+    [UserSetting("P2三雷ST")] public static bool P2ThirdLightningSt { get; set; } = true;
 
     [UserSetting("飞机劈冲颜色")] public static ScriptColor LimitCutColor { get; set; } = new() { V4 = new Vector4(1, 0.2f, 0.2f, 1) };
     [UserSetting("P2蓝毒颜色")] public static ScriptColor P2Blue { get; set; } = new() { V4 = new Vector4(102 / 255f, 136 / 255f, 187 / 255f, 1) };
@@ -32,9 +32,11 @@ public class TheEpicOfAlexander
     [UserSetting("P2紫毒颜色")] public static ScriptColor P2Purple { get; set; } = new() { V4 = new Vector4(85 / 255f, 34 / 255f, 153 / 255f, 1) };
     [UserSetting("P2绿毒颜色")] public static ScriptColor P2Green { get; set; } = new() { V4 = new Vector4(51 / 255f, 85 / 255f, 17 / 255f, 1) };
     [UserSetting("超级跳与回头扫颜色")] public static ScriptColor SuperJumpColor { get; set; } = new() { V4 = new Vector4(0.6f, 0.2f, 1, 1) };
+    [UserSetting("P2水属性压缩颜色")] public static ScriptColor CompressedWaterColor { get; set; } = new() { V4 = new Vector4(.2f, 1, 1, 1) };
+    [UserSetting("P2雷属性压缩颜色")] public static ScriptColor CompressedLightningColor { get; set; } = new() { V4 = new Vector4(0.6f, 0.2f, 1, 1) };
 
     [UserSetting("十字圣礼颜色")] public static ScriptColor SacramentColor { get; set; } = new() { V4 = new Vector4(.2f, 1, 1, 1) };
-
+    
     #endregion
 
     private static readonly Vector3 Center = new(100, 0, 100);
@@ -190,7 +192,7 @@ public class TheEpicOfAlexander
         sa.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    // 18507->末世宣言 对自身读条 18508->末世宣言 回头扇形多次 角度90 半径25？
+    // 18507->末世宣言 对自身使用 18508->末世宣言 回头扇形多次 角度90 半径25？
     [ScriptMethod(name: "通用-末世宣言", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:18507"])]
     public void ApocalypticRay(Event evt, ScriptAccessory sa)
     {
@@ -626,8 +628,13 @@ public class TheEpicOfAlexander
     
     #region P2
 
+    private uint _p2WaterTimes = 0;
+    private uint _p2LightingTimes = 0;
+    
     private void P2Reset()
     {
+        _p2WaterTimes = 0;
+        _p2LightingTimes = 0;
     }
 
     #region 传毒
@@ -737,19 +744,93 @@ public class TheEpicOfAlexander
     }
 
     [ScriptMethod(name: "P2-水属性压缩", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2142"])]
-    public void CompressedWater(Event evt, ScriptAccessory sa)
+    public async void CompressedWater(Event evt, ScriptAccessory sa)
     {
+        _p2WaterTimes++;
         var dp = sa.FastDp("水属性压缩", evt.TargetId(), 5000, 8);
         dp.Delay = 24000;
+        dp.Color = CompressedWaterColor.V4;
         sa.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        var me = sa.GetMe();
+        var myIdx = sa.MyIndex();
+        Vector3 wpos = Center;
+        
+        await Task.Delay(1000);
+        if (me.HasStatus(2143)) return;
+        switch (_p2WaterTimes)
+        {
+            case 1:
+                if (myIdx < 2 || myIdx == 5)
+                    return;
+                if (myIdx < 4 && sa.Data.Me != evt.TargetId())
+                    return;
+                wpos = new Vector3(86, 0, 100);
+                break;
+            case 2:
+                if (myIdx < 4 || myIdx == 5)
+                    return;
+                wpos = new Vector3(116, 0, 100);
+                break;
+            case 3:
+                if (myIdx < 2 || myIdx == 5)
+                    return;
+                if (me.HasStatus(2144)) // 水弱
+                    return;
+                wpos = new Vector3(116, 0, 100);
+                break;
+            default:
+                return;
+        }
+        dp = sa.WaypointDp(wpos, 8000, 20000);
+        sa.Method.SendDraw(DrawModeEnum.Imgui, sa.Data.Me == evt.TargetId() ? DrawTypeEnum.Displacement : DrawTypeEnum.Line, dp);
     }
 
     [ScriptMethod(name: "P2-雷属性压缩", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2143"])]
-    public void CompressedLightning(Event evt, ScriptAccessory sa)
+    public async void CompressedLightning(Event evt, ScriptAccessory sa)
     {
+        _p2LightingTimes++;
         var dp = sa.FastDp("雷属性压缩", evt.TargetId(), 5000, 8);
         dp.Delay = 24000;
+        dp.Color = CompressedLightningColor.V4;
         sa.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        var me = sa.GetMe();
+        var myIdx = sa.MyIndex();
+        Vector3 wpos = Center;
+        
+        await Task.Delay(1000);
+        if (me.HasStatus(2142)) return;
+        switch (_p2LightingTimes)
+        {
+            case 1:
+                if (myIdx < 2)
+                    return;
+                if (myIdx > 3 && sa.Data.Me != evt.TargetId())
+                    return;
+                wpos = new Vector3(106.8f, 0, 100);
+                break;
+            case 2:
+                if (myIdx < 2 || myIdx > 3)
+                    return;
+                wpos = Center;
+                break;
+            case 3:
+                if (myIdx == 0 || myIdx == 5)
+                    return;
+                if (!P2ThirdLightningSt && myIdx == 1)
+                    return;
+                if (P2ThirdLightningSt && myIdx > 3) // 雷弱
+                    return;
+                if (me.HasStatus(2145))
+                    return;
+                wpos = P2ThirdLightningSt ? new Vector3(90, 0, 110) : new Vector3(93.2f, 0, 100);
+                break;
+            default:
+                return;
+        }
+        dp = sa.WaypointDp(wpos, 8000, 20000);
+        sa.Method.SendDraw(DrawModeEnum.Imgui, sa.Data.Me == evt.TargetId() ? DrawTypeEnum.Displacement : DrawTypeEnum.Line, dp);
     }
 
     [ScriptMethod(name: "P2-水雷清除", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:18492"], userControl: false)]
