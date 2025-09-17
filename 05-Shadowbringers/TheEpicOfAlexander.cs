@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
-using ECommons;
 using KodakkuAssist.Data;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
@@ -15,7 +14,7 @@ using KodakkuAssist.Module.Draw.Manager;
 
 namespace Cyf5119Script.Shadowbringers.TheEpicOfAlexander;
 
-[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战", territorys: [887], version: "0.0.2.8", author: "Cyf5119", note: Note, updateInfo: UpdateInfo)]
+[ScriptType(guid: "E047803D-38D5-45B4-AF48-71C0691CDCC9", name: "亚历山大绝境战", territorys: [887], version: "0.0.2.9", author: "Cyf5119", note: Note, updateInfo: UpdateInfo)]
 public class TheEpicOfAlexander
 {
     private const string Note = "有问题来DC反馈。\n画图基于设置的小队职能进行绘制，请确保设置准确无误。\n/e KASCLEAR 清理残余画图";
@@ -55,7 +54,7 @@ public class TheEpicOfAlexander
 
     private uint _phase = 0;
 
-    private uint[] _p0LimitCutList = [0, 0, 0, 0, 0, 0, 0, 0];
+    private List<uint> _p0LimitCutList = [0, 0, 0, 0, 0, 0, 0, 0];
     private bool _p0LimitCutEnabled = false;
     private uint _p0LimitCutTimes = 0;
 
@@ -147,13 +146,13 @@ public class TheEpicOfAlexander
         if (!_p0LimitCutEnabled) return;
 
         var dp = sa.FastDp("阿尔法之剑", evt.SourceId(), 1100, 25 + 5);
-        dp.TargetObject = _p0LimitCutList[_p0LimitCutTimes * 2];
+        dp.TargetObject = _p0LimitCutList[(int)(_p0LimitCutTimes * 2)];
         dp.Radian = float.Pi / 2;
         dp.Color = LimitCutColor.V4;
         sa.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
 
         dp = sa.FastDp("超级摧毁者冲击", evt.SourceId(), 2600, new Vector2(10, 50 + 5));
-        dp.TargetObject = _p0LimitCutList[_p0LimitCutTimes * 2 + 1];
+        dp.TargetObject = _p0LimitCutList[(int)(_p0LimitCutTimes * 2 + 1)];
         dp.Color = LimitCutColor.V4;
         sa.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
 
@@ -640,8 +639,8 @@ public class TheEpicOfAlexander
     #region 传毒
 
     // 蓝α 橙β 紫γ 绿δ
-    private static uint[] _decreeNisis = [2222, 2223, 2137, 2138];
-    private static uint[] _judgmentNisis = [2224, 2225, 2139, 2140];
+    private static List<uint> _decreeNisis = [2222, 2223, 2137, 2138];
+    private static List<uint> _judgmentNisis = [2224, 2225, 2139, 2140];
     private static ScriptColor[] _nisiColors = [P2Blue, P2Orange, P2Purple, P2Green];
 
     [ScriptMethod(name: "上毒", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^(222[23]|213[78])$"])]
