@@ -10,6 +10,7 @@ using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Module.Draw.Manager;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
 namespace Cyf5119Script.Endwalker.P1To4N;
 
@@ -64,7 +65,11 @@ public class P1To4N
     [ScriptMethod(EventTypeEnum.TargetIcon, "P1N-分摊", ["Id:003E"])]
     public void TrueHoly(Event @event, ScriptAccessory accessory)
     {
-        if (ClientState.TerritoryType != 1002) return;
+        unsafe
+        {
+            var x = AgentMap.Instance()->CurrentTerritoryId;
+            if (ClientState.TerritoryType != 1002) return;
+        }
         var dp = accessory.FastDp("分摊", @event.TargetId(), 5000, 6, true);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
