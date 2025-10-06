@@ -7,17 +7,16 @@ using System.Threading.Tasks;
 using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
-using ECommons;
-using ECommons.DalamudServices;
-using ECommons.GameFunctions;
+// using ECommons;
+// using ECommons.DalamudServices;
+// using ECommons.GameFunctions;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 
 namespace Cyf5119Script.Endwalker.AalBomb;
 
-[ScriptType(guid: "2F27EFB2-CE87-4E6A-9D83-60FE4CC26141", name: "AalBomb", territorys: [1179, 1180], version: "0.0.0.3",
-    author: "Cyf5119", "已修改休眠逻辑。")]
+// [ScriptType(guid: "2F27EFB2-CE87-4E6A-9D83-60FE4CC26141", name: "AalBomb", territorys: [1179, 1180], version: "0.0.0.3", author: "Cyf5119", "已修改休眠逻辑。")]
 public class AalBomb
 {
     [UserSetting(note: "每轮炸弹检测间隔（毫秒）")] public int Prop1 { get; set; } = 100;

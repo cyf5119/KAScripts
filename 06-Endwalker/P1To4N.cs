@@ -3,8 +3,9 @@ using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
+using Dalamud.IoC;
+using Dalamud.Plugin.Services;
 using Newtonsoft.Json;
-using ECommons.DalamudServices;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
@@ -16,6 +17,7 @@ namespace Cyf5119Script.Endwalker.P1To4N;
 public class P1To4N
 {
     // private uint _status = 0;
+    [PluginService] public static IClientState ClientState { get; private set; }
 
     public void Init(ScriptAccessory accessory)
     {
@@ -62,7 +64,7 @@ public class P1To4N
     [ScriptMethod(EventTypeEnum.TargetIcon, "P1N-分摊", ["Id:003E"])]
     public void TrueHoly(Event @event, ScriptAccessory accessory)
     {
-        if (Svc.ClientState.TerritoryType != 1002) return;
+        if (ClientState.TerritoryType != 1002) return;
         var dp = accessory.FastDp("分摊", @event.TargetId(), 5000, 6, true);
         accessory.Method.SendDraw(0, DrawTypeEnum.Circle, dp);
     }
